@@ -3,13 +3,12 @@ package br.ufsc.pibic.nfcrw;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         btnWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "YEAH!", Toast.LENGTH_SHORT).show();
+                Intent readIntent = new Intent(MainActivity.this, NFCWriteActivity.class);
+                MainActivity.this.startActivity(readIntent);
             }
         });
     }
@@ -73,5 +73,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            if (getIntent().getExtras().getBoolean("WSUC", false)) {
+                Toast.makeText(this, "Gravação efetuada!", Toast.LENGTH_SHORT).show();
+                getIntent().removeExtra("WSUC");
+            }
+        } catch (NullPointerException e) {
+            Log.e("LOG", e.getMessage());
+        }
+
+
+        super.onResume();
     }
 }
