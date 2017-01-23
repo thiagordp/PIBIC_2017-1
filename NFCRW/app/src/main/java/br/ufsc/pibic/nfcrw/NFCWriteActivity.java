@@ -21,37 +21,37 @@ import android.widget.TextView;
 public class NFCWriteActivity extends AppCompatActivity {
 
     /**
-     *
+     * Tag para mensagens de Log
      */
     private static final String TAG = "NFC_WRITE_ACT";
 
     /**
-     *
+     * Mensagem de sucesso para a intent.
      */
     private static final String WRISUCESS = "WSUC";
 
     /**
-     *
+     * Visualizador de textos
      */
     private TextView tvMessage;
 
     /**
-     *
+     * Caixa de texto para escrita do novo conteúdo das tags
      */
     private EditText edtWriteText;
 
     /**
-     *
+     * Adaptador NFC do dispositivo.
      */
     private NfcAdapter nfcAdapter;
 
     /**
-     *
+     * Filtragem de Intent's recebidas.
      */
     private IntentFilter[] intentFilters;
 
     /**
-     *
+     * Activity pendentente para ser executada.
      */
     private PendingIntent nfcPendingIntent;
 
@@ -63,6 +63,7 @@ public class NFCWriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Filtragem do tipo de Intent que será capturada.
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         intentFilters = new IntentFilter[]{tagDetected};
 
@@ -77,6 +78,8 @@ public class NFCWriteActivity extends AppCompatActivity {
             tvMessage.setText("Este dispositivo não tem suporte a NFC");
         } else {
             tvMessage.setText("Aguardando Gravação de Tag");
+
+            // Ativa activity, mas configura para que não seja executada caso já o esteja.
             nfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         }
     }
@@ -105,7 +108,9 @@ public class NFCWriteActivity extends AppCompatActivity {
         }
 
         if (nfcAdapter != null) {
+            // Ativa o envio em primeiro plano da Activity.
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, intentFilters, null);
+
         }
     }
 
@@ -122,14 +127,18 @@ public class NFCWriteActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
 //      super.onNewIntent(intent);
 
+        // Caso seja uma descoberta de uma TAG.
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
+            // Caso a caixa de texto não esja vazia.
             if (!TextUtils.isEmpty(edtWriteText.getText().toString())) {
-                NdefRecord ndefRecord = stringToNdefRecord(edtWriteText.getText().toString());
 
+                // Cria uma registro e uma mensagem NDEF a partir da String.
+                NdefRecord ndefRecord = stringToNdefRecord(edtWriteText.getText().toString());
                 NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
 
+                // Caso a escrita na tag ocorra, coloca a MainActivity em primeiro plano.
                 if (writeNFCTag(ndefMessage, detectedTag)) {
                     Intent main = new Intent(this, MainActivity.class);
 
@@ -175,17 +184,19 @@ public class NFCWriteActivity extends AppCompatActivity {
      */
     public static boolean writeNFCTag(NdefMessage ndefMessage, Tag tag) {
 
-        int sizeNdefMessage = ndefMessage.toByteArray().length;
+        int sizeNdefMessage = ndefMessage.toByteArray().length; // Número de bytes da mensagem NDEF
 
         try {
-            Ndef ndef = Ndef.get(tag);
+            Ndef ndef = Ndef.get(tag); // Cria um registro NDEF a partir da tag.
             if (ndef != null) {
-                ndef.connect();
+                ndef.connect(); // Habilita operações de leitura e escrita.
 
-                if (!ndef.isWritable()) return false;
+                if (!ndef.isWritable())
+                    return false; // Caso a tag não seja escrevível, retorna falso.
 
                 Log.d(TAG, "MAX size: " + ndef.getMaxSize() + "-- Size: " + sizeNdefMessage);
-                if (ndef.getMaxSize() < sizeNdefMessage) return false;
+                if (ndef.getMaxSize() < sizeNdefMessage)
+                    return false; // Caso o tamanho da msg seja maior que o tamanho da tag, retorna falso.
 
                 ndef.writeNdefMessage(ndefMessage);
 
