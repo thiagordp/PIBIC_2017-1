@@ -9,6 +9,8 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,8 +41,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -170,25 +170,39 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Fragment fragment = null;
+        Class fragmentClass = null;
+
         // Handle l view item clicks here.
         int id = item.getItemId();
-        Intent intent;
 
         if (id == R.id.nav_camera) {
-            intent = new Intent(MainActivity.this, OfertaActivity.class);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            fragmentClass = OffersFragment.class;
         } else if (id == R.id.nav_gallery) {
-
+            fragmentClass = PurchaseFragment.class;
         } else if (id == R.id.nav_slideshow) {
-
+            fragmentClass = SeenFragment.class;
         } else if (id == R.id.nav_manage) {
-
+            fragmentClass = SettingsFragment.class;
+        } else {
+            fragmentClass = OffersFragment.class;
         }
 
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            Log.e("ERROR", e.getMessage());
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
+        item.setChecked(true);
+        setTitle(item.getTitle());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawers(/*GravityCompat.START*/);
+
+
         return true;
     }
 }

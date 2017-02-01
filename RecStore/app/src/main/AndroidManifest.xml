@@ -20,11 +20,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +43,7 @@
             <data android:mimeType="text/plain" />
         </intent-filter>
 
-        <activity android:name=".OfertaActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
