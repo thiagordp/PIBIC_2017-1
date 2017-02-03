@@ -26,7 +26,7 @@ public class Mongo {
 
 	private MongoClient mongoClient;
 	private MongoDatabase mongoDatabase;
-	private MongoCollection<Document> mongoCollection;
+	private List<MongoCollection<Document>> mongoCollections;
 
 	/**
 	 * Construtor da classe
@@ -36,21 +36,32 @@ public class Mongo {
 	 * @param collection
 	 *            Coleção que será manipulada.
 	 */
-	public Mongo(String dbName, String collection) {
+	public Mongo(String dbName, List<String> collections) {
 		mongoClient = new MongoClient();
 		mongoDatabase = mongoClient.getDatabase(dbName);
-		mongoCollection = mongoDatabase.getCollection(collection);
+		mongoCollections = new ArrayList<>();
+
+		for (String collection : collections) {
+			mongoCollections.add(mongoDatabase.getCollection(collection));
+		}
 	}
 
 	/************************************************
-	 * MÉTODOS PÚBLICOS *
+	 * MÉTODOS PRIVADOS *
 	 ************************************************/
 	private void verificaInstancias() {
 
-		if (mongoClient == null || mongoDatabase == null || mongoCollection == null) {
+		if (mongoClient == null || mongoDatabase == null || mongoCollections.size() == 0) {
+
+			String collectionString = "";
+
+			for (MongoCollection<Document> collection : mongoCollections) {
+				collectionString.concat("|" + collection);
+			}
+
 			throw new NullPointerException(
 					"NullPointer\nVerifique se todos os parâmetros foram instanciados corretamente\nCliente: "
-							+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeção:" + mongoCollection);
+							+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeções:" + collectionString);
 		}
 	}
 
@@ -58,35 +69,61 @@ public class Mongo {
 	 * MÉTODOS PÚBLICOS *
 	 ************************************************/
 
+	/**
+	 * 
+	 */
 	public void fechaConexao() {
 		verificaInstancias();
 		mongoClient.close();
 	}
 
-	public void insere(Document documento) {
+	/**
+	 * 
+	 * @param documento
+	 * @param collection
+	 */
+	public void insere(Document documento, String collection) {
 		verificaInstancias();
 
-		mongoCollection.insertOne(documento);
-
+		mongoCollections.get(findCollection(mongoCollections, collection)).insertOne(documento);
 	}
 
-	public void insere(List<Document> documentos) {
+	/**
+	 * 
+	 * @param documentos
+	 * @param collection
+	 */
+	public void insere(List<Document> documentos, String collection) {
 		verificaInstancias();
 
-		mongoCollection.insertMany(documentos);
+		mongoCollections.get(findCollection(mongoCollections, collection)).insertMany(documentos);
 	}
 
-	public List<Document> procura(String chave, String valor) {
+	/**
+	 * 
+	 * @param chave
+	 * @param valor
+	 * @param collection
+	 * @return
+	 */
+	public List<Document> procura(String chave, String valor, String collection) {
 		verificaInstancias();
-		return procura(new Document(chave, valor));
+		return procura(new Document(chave, valor), collection);
 	}
 
-	public List<Document> procura(Document documento) {
+	/**
+	 * 
+	 * @param documento
+	 * @param collection
+	 * @return
+	 */
+	public List<Document> procura(Document documento, String collection) {
 		verificaInstancias();
 
 		List<Document> documents = new ArrayList<>();
 
-		FindIterable<Document> iterable = mongoCollection.find(documento);
+		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection))
+				.find(documento);
 
 		iterable.forEach(new Block<Document>() {
 			@Override
@@ -98,12 +135,17 @@ public class Mongo {
 		return documents;
 	}
 
-	public List<Document> listaRegistros() {
+	/**
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	public List<Document> listaRegistros(String collection) {
 		verificaInstancias();
 
 		List<Document> documents = new ArrayList<>();
 
-		FindIterable<Document> iterable = mongoCollection.find();
+		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection)).find();
 
 		iterable.forEach(new Block<Document>() {
 			@Override
@@ -115,14 +157,44 @@ public class Mongo {
 		return documents;
 	}
 
-	public void remove(Document documento) {
+	/**
+	 * 
+	 * @param documento
+	 * @param collection
+	 */
+	public void remove(Document documento, String collection) {
 		verificaInstancias();
-		mongoCollection.deleteOne(documento);
+		mongoCollections.get(findCollection(mongoCollections, collection)).deleteOne(documento);
 	}
 
-	public void removeTodos() {
+	/**
+	 * 
+	 * @param collection
+	 */
+	public void removeTodos(String collection) {
 		verificaInstancias();
-		mongoCollection.deleteMany(new Document());
+		mongoCollections.get(findCollection(mongoCollections, collection)).deleteMany(new Document());
+	}
+
+	/**
+	 * 
+	 * @param list
+	 * @param collection
+	 * @return
+	 */
+	public int findCollection(List<MongoCollection<Document>> list, String collection) {
+
+		if (list == null || collection == null || collection == "") {
+			return -1;
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getNamespace().getCollectionName().equals(collection)) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	/************************************************
@@ -159,19 +231,12 @@ public class Mongo {
 		this.mongoDatabase = mongoDatabase;
 	}
 
-	/**
-	 * @return the mongoCollection
-	 */
-	public MongoCollection<Document> getMongoCollection() {
-		return mongoCollection;
+	public List<MongoCollection<Document>> getMongoCollections() {
+		return mongoCollections;
 	}
 
-	/**
-	 * @param mongoCollection
-	 *            the mongoCollection to set
-	 */
-	public void setMongoCollection(MongoCollection<Document> mongoCollection) {
-		this.mongoCollection = mongoCollection;
+	public void setMongoCollections(List<MongoCollection<Document>> mongoCollections) {
+		this.mongoCollections = mongoCollections;
 	}
 
 }
