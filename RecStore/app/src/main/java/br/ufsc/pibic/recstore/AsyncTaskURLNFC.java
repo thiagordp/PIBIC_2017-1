@@ -5,4 +5,5 @@ package br.ufsc.pibic.recstore;
  */
 
 public class AsyncTaskURLNFC {
+
 }
