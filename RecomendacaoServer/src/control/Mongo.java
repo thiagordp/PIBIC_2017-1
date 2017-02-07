@@ -59,9 +59,8 @@ public class Mongo {
 				collectionString.concat("|" + collection);
 			}
 
-			throw new NullPointerException(
-					"NullPointer\nVerifique se todos os parâmetros foram instanciados corretamente\nCliente: "
-							+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeções:" + collectionString);
+			throw new NullPointerException("NullPointer\nVerifique se todos os parâmetros foram instanciados corretamente\nCliente: "
+								+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeções:" + collectionString);
 		}
 	}
 
@@ -106,7 +105,7 @@ public class Mongo {
 	 * @param collection
 	 * @return
 	 */
-	public List<Document> procura(String chave, String valor, String collection) {
+	public List<Document> procura(String chave, Object valor, String collection) {
 		verificaInstancias();
 		return procura(new Document(chave, valor), collection);
 	}
@@ -122,8 +121,7 @@ public class Mongo {
 
 		List<Document> documents = new ArrayList<>();
 
-		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection))
-				.find(documento);
+		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection)).find(documento);
 
 		iterable.forEach(new Block<Document>() {
 			@Override

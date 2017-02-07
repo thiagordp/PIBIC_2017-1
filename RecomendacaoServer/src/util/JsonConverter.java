@@ -5,6 +5,8 @@ package util;
 
 import java.util.List;
 
+import org.bson.Document;
+
 import model.Product;
 
 /**
@@ -19,17 +21,22 @@ public class JsonConverter {
 	 * @return
 	 */
 	// Juntar os JSONs vindos do banco
-	public static String productListToJson(List<Object> productList) {
-		String json = "{ ";
+	public static String productListToJson(List<Document> productList) {
+		String json = "products : [";
 
-		if (productList != null) {
+		for (int i = 0; productList != null && i < productList.size(); i++) {
+			Document document = productList.get(i);
 
-			for (int i = 0; i < productList.size(); i++) {
+			json += document.toJson();
 
+			// Caso não seja o último, adiciona vírgula
+			if (i < (productList.size() - 1)) {
+				json += ", ";
 			}
 		}
-		
-		return "";
+		json += " ]";
+
+		return json;
 	}
 
 	/**
