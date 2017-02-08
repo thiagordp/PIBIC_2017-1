@@ -1,13 +1,15 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.ufsc.pibic.recstore.SeenFragment">
+    tools:context="br.ufsc.pibic.recstore.fragments.SeenFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ListView
+        android:id="@+id/lvSeens"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="seen fragment" />
+        android:layout_gravity="fill" />
 
-</FrameLayout>
+
+</LinearLayout>

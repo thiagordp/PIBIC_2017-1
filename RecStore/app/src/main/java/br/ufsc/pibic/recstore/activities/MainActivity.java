@@ -1,4 +1,4 @@
-package br.ufsc.pibic.recstore;
+package br.ufsc.pibic.recstore.activities;
 
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
@@ -27,17 +27,23 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.json.JSONArray;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Collection;
+
+import br.ufsc.pibic.recstore.R;
+import br.ufsc.pibic.recstore.fragments.OffersFragment;
+import br.ufsc.pibic.recstore.fragments.PurchaseFragment;
+import br.ufsc.pibic.recstore.fragments.SeenFragment;
+import br.ufsc.pibic.recstore.fragments.SettingsFragment;
+import br.ufsc.pibic.recstore.util.Util;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BeaconConsumer {
 
     private BeaconManager beaconManager;
     private PendingIntent pendingIntent;
+    private int detected = 0;
     private NfcAdapter nfcAdapter;
     private String[][] nfcTechLists;
     private IntentFilter[] intentFilters;
@@ -133,7 +139,13 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(getApplicationContext(), "Tag identificada!", Toast.LENGTH_LONG).show();
 
-        createURLNFC("", this.userId);
+
+        String x = "{products : [{ \"_id\" : { \"$oid\" : \"5897d24e2385721f682a73d2\" }, " +
+                "\"product_id\" : 2, \"product_name\" : \"Watch\", \"product_price\" : 50.0 }, " +
+                "{ \"_id\" : { \"$oid\" : \"5897d24d2385721f682a73d1\" }, " +
+                "\"product_id\" : 1, \"product_name\" : \"Caneta\", \"product_price\" : 2.5 } ]}";
+
+        JSONArray json = Util.parserJason(x);
 
         try {
             Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
@@ -149,14 +161,24 @@ public class MainActivity extends AppCompatActivity
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-                if (collection.size() > 0) {
+                if (detected == 0 && collection.size() > 0) {
 
                     Log.d("DEBUG", collection.size() + " Beacon(s) encontrado(s)!");
 
+
                     for (Beacon beacon : collection) {
                         Log.d("DEBUG", beacon.getBluetoothName() + "||" + beacon.getId1() + "||" + beacon.getRssi());
-                        createURLBeacon(beacon, userId);
+
+
+                        String url = Util.createURLBeacon(beacon, userId);
+                        Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
+                        //intentAct.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intentAct.putExtra("url", url);
+
+                        startActivity(intentAct);
+                        break;
                     }
+                    detected = 1;
                 }
             }
         });
@@ -251,67 +273,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void createURLBeacon(Beacon beacon, int userId) {
 
-    }
+    /*********************************
+     * Criação de URL de interação
+     * <p>
+     * TODO: Substituir por Asynctasks
+     *********************************/
 
-    private void createURLNFC(String nfcContent, int userId) {
-        /*
-         Dados:
-            user_id
-            type = record
-            device_tech
-            device_mac
-         */
-        String user_id = String.valueOf(userId);
-        String type = InteractionDefinition.ACTION_SEEN;
-        String device_tech = String.valueOf(InteractionDefinition.DEVICE_NFC);
-        String device_mac = nfcContent;
-
-        Log.d("DEBUG", "Montando URL...");
-        try {
-            user_id = URLEncoder.encode(user_id, "UTF-8");
-            type = URLEncoder.encode(type, "UTF-8");
-            device_tech = URLEncoder.encode(device_tech, "UTF-8");
-            device_mac = URLEncoder.encode(device_mac, "UTF-8");
-
-        } catch (Exception e) {
-
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        // TODO: Pegar o caminho certo para o servidor depois.
-        String path = "";
-
-        stringBuilder.append(path);
-
-        stringBuilder.append("?user_id=");
-        stringBuilder.append(user_id);
-        stringBuilder.append("&type=");
-        stringBuilder.append(type);
-        stringBuilder.append("&device_tech=");
-        stringBuilder.append(device_tech);
-        stringBuilder.append("&device_mac=");
-        stringBuilder.append(device_mac);
-
-        try {
-            URL url = new URL(stringBuilder.toString());
-
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String response = Util.convertStreamToString(urlConnection.getInputStream());
-
-                // TODO: Processar resposta do servidor para mostrar pro usuário.
-
-                //TODO: Colocar tudo em AsyncTask
-
-            }
-        } catch (Exception e) {
-
-        }
-    }
 
     private void initializeFragment() {
         Fragment fragment = null;
@@ -328,7 +296,7 @@ public class MainActivity extends AppCompatActivity
 
         currentFragment = OffersFragment.class;
 
-        setTitle("Compras");
+        setTitle("Ofertas");
 
         DrawerLayout drawer2 = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer2.closeDrawers(/*GravityCompat.START*/);

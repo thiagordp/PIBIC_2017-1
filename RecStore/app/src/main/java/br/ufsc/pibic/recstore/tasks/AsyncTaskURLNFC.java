@@ -1,4 +1,4 @@
-package br.ufsc.pibic.recstore;
+package br.ufsc.pibic.recstore.tasks;
 
 /**
  * Created by trdp on 2/4/17.

@@ -1,4 +1,4 @@
-package br.ufsc.pibic.recstore;
+package br.ufsc.pibic.recstore.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import br.ufsc.pibic.recstore.R;
 
 public class LoginActivity extends AppCompatActivity {
 
