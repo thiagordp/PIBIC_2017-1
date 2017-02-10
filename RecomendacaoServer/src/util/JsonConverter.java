@@ -22,7 +22,7 @@ public class JsonConverter {
 	 */
 	// Juntar os JSONs vindos do banco
 	public static String productListToJson(List<Document> productList) {
-		String json = "products : [";
+		String json = "{ products : [";
 
 		for (int i = 0; productList != null && i < productList.size(); i++) {
 			Document document = productList.get(i);
@@ -34,7 +34,7 @@ public class JsonConverter {
 				json += ", ";
 			}
 		}
-		json += " ]";
+		json += " ] }";
 
 		return json;
 	}

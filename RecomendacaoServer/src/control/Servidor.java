@@ -67,9 +67,25 @@ public class Servidor {
 		// PopulateDatabase.insertProducts();
 		// PopulateDatabase.insertDevices();
 		//
-		// return ((new Mongo("pibic", getCollectionList())).listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME)).toString();
+		// return ((new Mongo("pibic", getCollectionList())).listaRegistros(InteractionDefinition.INTERACTION_COLLECTION_NAME)).toString();
 
 		////////////////////////////////////////////////////////////////////////////////////
+
+		// return new Mongo("pibic", getCollectionList())
+		// .procura("type", InteractionDefinition.ACTION_PURCHASE, InteractionDefinition.INTERACTION_COLLECTION_NAME)
+		// .toString();
+		// PopulateDatabase.insertPurchase();
+		// return "abc13";
+
+		// Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
+		//
+		// List<Document> documents = mongo.procura("type", "1", InteractionDefinition.INTERACTION_COLLECTION_NAME);
+		//
+		// for (Document document : documents) {
+		// mongo.remove(document, InteractionDefinition.INTERACTION_COLLECTION_NAME);
+		// }
+
+		// return "abcc123";
 
 		switch (type) {
 		case InteractionDefinition.TYPE_URL_PURCHASE:
@@ -122,7 +138,7 @@ public class Servidor {
 		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
-			return "{\"nopurchase\":0}";
+			return "{\"products\":[]}";
 		}
 
 		List<Document> listSeenProduct = new ArrayList<>();
@@ -253,11 +269,10 @@ public class Servidor {
 		// Selecionar toda a info do produto
 
 		if (listProd.size() == 0) {
-			return "{\"noproduct\":0}";
+			return "{}";
 		}
 
 		Document produto = listProd.get(0);
-
 		// Transformar todos os dados em um registro de interação
 		Document record = new Document(); // Registro da interação
 

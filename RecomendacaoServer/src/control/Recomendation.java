@@ -60,9 +60,9 @@ public class Recomendation {
 			for (; i < listProd.size(); i += random.nextInt(listProd.size() - i + 1)) {
 				listDocument.add(listProd.get(i));
 			}
-			removeDuplicate(listDocument);
 		}
 
+		removeDuplicate(listDocument);
 		mongodb.fechaConexao();
 
 		return JsonConverter.productListToJson(listDocument);
