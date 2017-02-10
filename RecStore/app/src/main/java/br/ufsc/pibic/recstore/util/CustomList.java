@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.ufsc.pibic.recstore.R;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskImage;
 
 /**
  * Created by trdp on 2/7/17.
@@ -56,7 +57,12 @@ CustomList extends ArrayAdapter<String> {
         TextView tvName = (TextView) rowView.findViewById(R.id.tvName);
         TextView tvDate = (TextView) rowView.findViewById(R.id.tvDate);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_menu_camera);  // TODO pegar imagem correta
+        imageView.setImageResource(R.drawable.image_not_available);  // TODO pegar imagem correta
+
+
+        AsyncTaskImage taskImage = new AsyncTaskImage(getContext(), rowView);
+        taskImage.execute(urls[position]);
+
 
         tvId.setText(String.valueOf(id[position]));
         tvName.setText(names[position]);

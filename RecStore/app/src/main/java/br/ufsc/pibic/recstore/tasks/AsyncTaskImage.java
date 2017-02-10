@@ -33,7 +33,8 @@ public class AsyncTaskImage extends AsyncTask<String, Void, Bitmap> {
             ///////////////////
             String url = params[0];
 
-            Log.d("DEBUG_ASYC", "befor");
+            Log.d("DEBUG_ASYC", "before: " + url);
+
 
             URL Url = new URL(url);
             Log.d("DEBUG_ASYC", "befor2");
@@ -60,8 +61,11 @@ public class AsyncTaskImage extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-        imageView.setImageBitmap(bitmap);
+        if (bitmap != null) {
+            Log.d("TASK_IMG", bitmap.toString());
+            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
 }

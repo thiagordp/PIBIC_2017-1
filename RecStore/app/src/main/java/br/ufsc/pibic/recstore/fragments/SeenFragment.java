@@ -4,21 +4,22 @@ package br.ufsc.pibic.recstore.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import br.ufsc.pibic.recstore.R;
-import br.ufsc.pibic.recstore.util.CustomList;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskURLPurchase;
+import br.ufsc.pibic.recstore.util.InteractionDefinition;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SeenFragment extends Fragment {
-
+    private Integer user_id;
     ListView listView;
 
     /////////////
@@ -35,16 +36,14 @@ public class SeenFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_seen, container, false);
-        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_purchase, container, false);
 
-        CustomList customList = new CustomList(getActivity(), nome, id, data, url);
-        listView = (ListView) v.findViewById(R.id.lvSeens);
-        listView.setAdapter(customList);
+        this.user_id = getArguments().getInt("user_id");
 
-
-        Toast.makeText(getContext(), "Yeah", Toast.LENGTH_SHORT).show();
-
+        AsyncTaskURLPurchase taskURLPurchase = new AsyncTaskURLPurchase(getContext(), v);
+        Log.d("PURCHASE", "user: " + user_id);
+        String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
+        taskURLPurchase.execute(buildURL);
         return v;
     }
 

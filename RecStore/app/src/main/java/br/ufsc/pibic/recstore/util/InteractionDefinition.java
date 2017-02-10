@@ -1,6 +1,7 @@
 package br.ufsc.pibic.recstore.util;
 
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,8 @@ public class InteractionDefinition {
     public static final String INTERACTION_COLLECTION_NAME = "interaction";
 
 
+    public static final String URL_PREFIX = "http://192.168.1.29:8080/RecomendacaoServer?";
+
     public static List<String> getCollectionList() {
 
         List<String> lista = new ArrayList<>();
@@ -83,10 +86,11 @@ public class InteractionDefinition {
         return lista;
     }
 
+
     public static String buildURL(int type, int userId) {
 
         // TODO: trocar pela URL correta
-        String path = "http://localhost:8080/RecomendacaoServer";
+        String path = URL_PREFIX;
 
         try {
             String strType = URLEncoder.encode(String.valueOf(type), "UTF-8");
@@ -95,7 +99,7 @@ public class InteractionDefinition {
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.append(path);
-            stringBuilder.append("?type=");
+            stringBuilder.append("type=");
             stringBuilder.append(strType);
             stringBuilder.append("&user_id=");
             stringBuilder.append(strUser);
@@ -105,6 +109,40 @@ public class InteractionDefinition {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Construir URL a partir dos parâmetros informados
+     *
+     * @param userId          Identificação do usuário
+     * @param interactionType Tipo de Interação
+     * @param deviceType      Tipo de dispositivo
+     * @param deviceMac       MAC do dispositivo
+     * @return URL
+     */
+    public static String buildURL(int userId, int interactionType, int deviceType, String deviceMac) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(InteractionDefinition.URL_PREFIX);
+
+        stringBuilder.append("user_id=");
+        stringBuilder.append(userId);
+
+        stringBuilder.append("&type=");
+        stringBuilder.append(interactionType);
+
+        stringBuilder.append("&device_tech=");
+        stringBuilder.append(deviceType);
+
+        stringBuilder.append("&device_mac=");
+        try {
+            stringBuilder.append(URLEncoder.encode(deviceMac, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString();
     }
 
 }

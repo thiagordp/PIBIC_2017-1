@@ -2,28 +2,28 @@ package br.ufsc.pibic.recstore.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import br.ufsc.pibic.recstore.R;
-import br.ufsc.pibic.recstore.util.CustomList;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskURLOffer;
+import br.ufsc.pibic.recstore.util.InteractionDefinition;
 
 
 public class OffersFragment extends Fragment {
     private ListView listView;
-
-    String nome[] = {"Ofertas", "Oftalmotorrinolaringologista", "Borracha", "Mouse", "Relógio", "Smartphone"};
-    String data[] = {"10/02/2015", "10/03/2015", "02/02/2016", "26/05/2014", "13/05/2014", "10/02/2016"};
-    Long id[] = {7899264359674L, 2L, 3L, 4L, 5L, 6L};
-    String url[] = {"", "abc", "abc"};
+    private Integer user_id;
+    String nome[];
+    String data[];
+    Long id[];
+    String url[];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -31,18 +31,15 @@ public class OffersFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        View v = inflater.inflate(R.layout.fragment_seen, container, false);
-        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        CustomList customList = new CustomList(getActivity(), nome, id, data, url);
-        listView = (ListView) v.findViewById(R.id.lvSeens);
-        listView.setAdapter(customList);
+        this.user_id = getArguments().getInt("user_id");
 
-
-        Toast.makeText(getContext(), "Yeah", Toast.LENGTH_SHORT).show();
+        AsyncTaskURLOffer taskURLOffer = new AsyncTaskURLOffer(getContext(), v);
+        Log.d("OFFER", "user: " + user_id);
+        String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_OFFER, user_id);
+        taskURLOffer.execute(buildURL);
 
         return v;
     }
-
-
 }

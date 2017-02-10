@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import br.ufsc.pibic.recstore.R;
-import br.ufsc.pibic.recstore.tasks.AsyncTaskURLBeacon;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskURLRecord;
 
 public class InteractionActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class InteractionActivity extends AppCompatActivity {
             url = extras.getString("url");
         }
         Log.d("INT_ADT", url);
-        AsyncTaskURLBeacon taskURLBeacon = new AsyncTaskURLBeacon(getApplicationContext(), getWindow().getDecorView().getRootView());
+        AsyncTaskURLRecord taskURLBeacon = new AsyncTaskURLRecord(getApplicationContext(), getWindow().getDecorView().getRootView());
 
         taskURLBeacon.execute(url);
     }

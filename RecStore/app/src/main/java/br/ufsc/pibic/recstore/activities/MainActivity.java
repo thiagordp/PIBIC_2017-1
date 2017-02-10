@@ -4,9 +4,12 @@ import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -27,8 +30,8 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
-import org.json.JSONArray;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import br.ufsc.pibic.recstore.R;
@@ -36,6 +39,7 @@ import br.ufsc.pibic.recstore.fragments.OffersFragment;
 import br.ufsc.pibic.recstore.fragments.PurchaseFragment;
 import br.ufsc.pibic.recstore.fragments.SeenFragment;
 import br.ufsc.pibic.recstore.fragments.SettingsFragment;
+import br.ufsc.pibic.recstore.util.InteractionDefinition;
 import br.ufsc.pibic.recstore.util.Util;
 
 public class MainActivity extends AppCompatActivity
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private String[][] nfcTechLists;
     private IntentFilter[] intentFilters;
     private Class currentFragment = null;
-    private Integer userId = -1;
+    private Integer userId = 1;
 
     private int bounded = 0;
 
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity
 
         ////////////////////////////////////
         userId = 1; // TODO: pegar o user_id da tela de login
+        // TODO: pegar o id pelos Extras da intent.
         /////////////////////////////
     }
 
@@ -123,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                     ndefIntent.addDataType("*/*");
                     intentFilters = new IntentFilter[]{ndefIntent};
                 } catch (Exception e) {
-
+//
                 }
 
                 nfcTechLists = new String[][]{new String[]{NfcF.class.getName()}};
@@ -137,19 +142,40 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        Toast.makeText(getApplicationContext(), "Tag identificada!", Toast.LENGTH_LONG).show();
-
-
-        String x = "{products : [{ \"_id\" : { \"$oid\" : \"5897d24e2385721f682a73d2\" }, " +
-                "\"product_id\" : 2, \"product_name\" : \"Watch\", \"product_price\" : 50.0 }, " +
-                "{ \"_id\" : { \"$oid\" : \"5897d24d2385721f682a73d1\" }, " +
-                "\"product_id\" : 1, \"product_name\" : \"Caneta\", \"product_price\" : 2.5 } ]}";
-
-        JSONArray json = Util.parserJason(x);
 
         try {
             Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
-            //intentAct.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            String nfcContent = "";
+
+            Parcelable[] data = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            if (data != null) {
+                try {
+                    for (int i = 0; i < data.length; i++) {
+                        NdefRecord[] recs = ((NdefMessage) data[i]).getRecords();
+                        for (int j = 0; j < recs.length; j++) {
+                            if (recs[j].getTnf() == NdefRecord.TNF_WELL_KNOWN &&
+                                    Arrays.equals(recs[j].getType(), NdefRecord.RTD_TEXT)) {
+                                byte[] payload = recs[j].getPayload();
+                                String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+                                int langCodeLen = payload[0] & 0077;
+
+
+                                nfcContent += new String(payload, langCodeLen + 1, payload.length - langCodeLen - 1, textEncoding);
+
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("TagDispatch", e.toString());
+                }
+            }
+
+
+            String url = InteractionDefinition.buildURL(userId, InteractionDefinition.TYPE_URL_RECORD,
+                    InteractionDefinition.DEVICE_NFC, nfcContent);
+            intentAct.putExtra("url", url);
+
             startActivity(intentAct);
         } catch (Exception e) {
             Log.e("DEBUG", e.getMessage());
@@ -260,6 +286,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         currentFragment = fragmentClass;
+        Bundle bundle = new Bundle();
+        bundle.putInt("user_id", userId);
+
+        fragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
@@ -268,7 +298,6 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawers(/*GravityCompat.START*/);
-
 
         return true;
     }
@@ -290,6 +319,11 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e("ERROR", e.getMessage());
         }
+        Bundle bundle = new Bundle();
+        bundle.putInt("user_id", userId);
+
+        fragment.setArguments(bundle);
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
