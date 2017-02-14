@@ -35,20 +35,17 @@ public class AsyncTaskImage extends AsyncTask<String, Void, Bitmap> {
 
             Log.d("DEBUG_ASYC", "before: " + url);
 
-
             URL Url = new URL(url);
             Log.d("DEBUG_ASYC", "befor2");
             HttpURLConnection urlConnection = (HttpURLConnection) Url.openConnection();
             Log.d("DEBUG_ASYC", "befor3");
 
             Log.d("URL", urlConnection.toString());
+
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 Log.d("DEBUG_ASYC", "befor4");
                 imagem = BitmapFactory.decodeStream(urlConnection.getInputStream());
                 Log.d("DEBUG_ASYC", "after");
-
-                Log.d("DEBUG_ASYC", "yeah");
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,5 +64,4 @@ public class AsyncTaskImage extends AsyncTask<String, Void, Bitmap> {
             imageView.setImageBitmap(bitmap);
         }
     }
-
 }

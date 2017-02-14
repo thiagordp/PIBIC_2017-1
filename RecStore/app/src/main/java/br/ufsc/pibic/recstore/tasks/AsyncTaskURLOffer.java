@@ -38,7 +38,6 @@ public class AsyncTaskURLOffer extends AsyncTask<String, Void, JSONArray> {
 
         for (String strUrl : urls) {
 
-
             try {
                 Log.d("ASYNC_OFFER", "Conectando com url");
 
@@ -88,7 +87,6 @@ public class AsyncTaskURLOffer extends AsyncTask<String, Void, JSONArray> {
             String data[] = new String[length];
             String url[] = new String[length];
 
-
             for (int i = 0; i < length; i++) {
                 JSONObject json;
 
@@ -102,8 +100,8 @@ public class AsyncTaskURLOffer extends AsyncTask<String, Void, JSONArray> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
+
             ListView listView;
             Log.d("ASYNC_OFFER", "View: " + view.toString());
             listView = (ListView) view.findViewById(R.id.lvOffers);

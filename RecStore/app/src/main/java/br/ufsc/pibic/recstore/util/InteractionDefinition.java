@@ -87,9 +87,15 @@ public class InteractionDefinition {
     }
 
 
+    /**
+     * Construir URL a partir dos parâmetros informados
+     *
+     * @param type
+     * @param userId
+     * @return
+     */
     public static String buildURL(int type, int userId) {
 
-        // TODO: trocar pela URL correta
         String path = URL_PREFIX;
 
         try {
@@ -107,7 +113,7 @@ public class InteractionDefinition {
             return stringBuilder.toString();
 
         } catch (Exception e) {
-            return null;
+            return "";
         }
     }
 
@@ -144,7 +150,6 @@ public class InteractionDefinition {
 
         return stringBuilder.toString();
     }
-
 }
 
 

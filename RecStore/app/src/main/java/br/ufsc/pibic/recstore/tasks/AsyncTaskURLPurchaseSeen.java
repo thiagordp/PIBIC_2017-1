@@ -23,11 +23,11 @@ import br.ufsc.pibic.recstore.util.Util;
  * Created by trdp on 2/7/17.
  */
 
-public class AsyncTaskURLPurchase extends AsyncTask<String, Void, JSONArray> {
+public class AsyncTaskURLPurchaseSeen extends AsyncTask<String, Void, JSONArray> {
     private Context context;
     private View view;
 
-    public AsyncTaskURLPurchase(Context context, View view) {
+    public AsyncTaskURLPurchaseSeen(Context context, View view) {
         this.context = context;
         this.view = view;
     }
@@ -107,7 +107,7 @@ public class AsyncTaskURLPurchase extends AsyncTask<String, Void, JSONArray> {
 
             ListView listView;
             Log.d("ASYNC_OFFER", "View: " + view.toString());
-            listView = (ListView) view.findViewById(R.id.lvPurchases);
+            listView = (ListView) view.findViewById(R.id.lvPurchaseSeen);
             Log.d("ASYNC_OFFER", "ListView: " + listView);
             CustomList customList = new CustomList((Activity) context, nome, id, data, url);
             listView.setAdapter(customList);

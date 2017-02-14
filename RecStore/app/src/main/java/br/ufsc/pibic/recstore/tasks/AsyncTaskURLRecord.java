@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,6 @@ public class AsyncTaskURLRecord extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected JSONObject doInBackground(String... urls) {
 
-        // TODO: Executar a URL
         for (String strUrl : urls) {
             try {
                 URL url = new URL(strUrl);
@@ -43,8 +43,8 @@ public class AsyncTaskURLRecord extends AsyncTask<String, Void, JSONObject> {
                     String response = Util.convertStreamToString(urlConnection.getInputStream());
 
                     Log.d("ASYNC_TASK_BLE", "resposta: " + response);
-                    JSONObject object = new JSONObject(response);
-                    return object;
+
+                    return (new JSONObject(response));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -52,37 +52,37 @@ public class AsyncTaskURLRecord extends AsyncTask<String, Void, JSONObject> {
             }
         }
 
-
         return null;
     }
 
     @Override
     protected void onPostExecute(JSONObject json) {
         try {
-            TextView edtCode, edtName, edtValue;
+            if (json != null) {
+                TextView edtCode, edtName, edtValue;
+
+                edtCode = (TextView) view.findViewById(R.id.edtCode);
+                edtName = (TextView) view.findViewById(R.id.edtName);
+                edtValue = (TextView) view.findViewById(R.id.edtValue);
 
 
-            edtCode = (TextView) view.findViewById(R.id.edtCode);
-            edtName = (TextView) view.findViewById(R.id.edtName);
-            edtValue = (TextView) view.findViewById(R.id.edtValue);
+                String code = json.get("product_id").toString();
+                String name = json.get("product_name").toString();
+                String value = json.get("product_price").toString();
+                String url = json.get("product_url").toString();
 
+                edtCode.setText(code);
+                edtName.setText(name);
+                edtValue.setText(value);
 
-            String code = json.get("product_id").toString();
-            String name = json.get("product_name").toString();
-            String value = json.get("product_price").toString();
-            String url = json.get("product_url").toString();
-
-            edtCode.setText(code);
-            edtName.setText(name);
-            edtValue.setText(value);
-
-            AsyncTaskImage asyncTaskImage = new AsyncTaskImage(context, view);
-            asyncTaskImage.execute(url);
-
+                AsyncTaskImage asyncTaskImage = new AsyncTaskImage(context, view);
+                asyncTaskImage.execute(url);
+            } else {
+                Toast.makeText(context, "Erro ao receber dados do servidor", Toast.LENGTH_SHORT).show();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e("JSON_PON", "-> " + e.getMessage());
-
         }
     }
 }

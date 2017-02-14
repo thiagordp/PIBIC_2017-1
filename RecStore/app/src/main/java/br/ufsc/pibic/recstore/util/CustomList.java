@@ -1,7 +1,6 @@
 package br.ufsc.pibic.recstore.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,16 +24,6 @@ CustomList extends ArrayAdapter<String> {
     private Long[] id;
     private String[] dates;
     private String[] urls;
-
-    public CustomList(Context context, int resource, Activity context1, String[] dates, Long[] id, String[] names, String[] urls) {
-        super(context, resource);
-        this.context = context1;
-        this.dates = dates;
-        this.id = id;
-        this.names = names;
-        this.urls = urls;
-    }
-
 
     public CustomList(Activity context,
                       String[] names, Long[] id, String[] dates, String[] urls) {

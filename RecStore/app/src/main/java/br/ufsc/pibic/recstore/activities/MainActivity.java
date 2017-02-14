@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -87,16 +88,16 @@ public class MainActivity extends AppCompatActivity
      */
     private void beaconSetup() {
 
-        // Verificação de bluetooth ativo.
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter != null && !adapter.isEnabled()) {
-            Toast.makeText(getApplicationContext(), "Ligue o bluetooth para usar a aplicação!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Bluetooth ativado", Toast.LENGTH_SHORT).show();
-        }
-
-        // Configuração do bluetooth
         if (bounded == 0) {
+            // Verificação de bluetooth ativo.
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            if (adapter != null && !adapter.isEnabled()) {
+                Toast.makeText(getApplicationContext(), "Ligue o bluetooth para usar a aplicação!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Bluetooth ativado", Toast.LENGTH_SHORT).show();
+            }
+
+            // Configuração do bluetooth
             beaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
             beaconManager.setBackgroundMode(true);
             beaconManager.setBackgroundScanPeriod(1000L);
@@ -142,7 +143,6 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-
         try {
             Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
 
@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity
                                 byte[] payload = recs[j].getPayload();
                                 String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
                                 int langCodeLen = payload[0] & 0077;
-
 
                                 nfcContent += new String(payload, langCodeLen + 1, payload.length - langCodeLen - 1, textEncoding);
 
@@ -303,13 +302,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /*********************************
-     * Criação de URL de interação
-     * <p>
-     * TODO: Substituir por Asynctasks
-     *********************************/
-
-
+    /**
+     * Inicializa a fragment que será mostrada logo na inicialização do app.
+     */
     private void initializeFragment() {
         Fragment fragment = null;
         Class fragmentClass = OffersFragment.class;
@@ -319,11 +314,11 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e("ERROR", e.getMessage());
         }
+
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
 
         fragment.setArguments(bundle);
-
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();

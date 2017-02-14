@@ -2,7 +2,6 @@ package br.ufsc.pibic.recstore.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,6 @@ import br.ufsc.pibic.recstore.util.InteractionDefinition;
 public class OffersFragment extends Fragment {
     private ListView listView;
     private Integer user_id;
-    String nome[];
-    String data[];
-    Long id[];
-    String url[];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,16 +25,17 @@ public class OffersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View v = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        this.user_id = getArguments().getInt("user_id");
+        this.user_id = getArguments().getInt("user_id"); // Recebe a identificação do usuário.
 
         AsyncTaskURLOffer taskURLOffer = new AsyncTaskURLOffer(getContext(), v);
-        Log.d("OFFER", "user: " + user_id);
+        // Log.d("OFFER", "user: " + user_id);
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_OFFER, user_id);
-        taskURLOffer.execute(buildURL);
 
+        if (!buildURL.equals("")) {             // Caso a URL tenha sido construída com sucesso
+            taskURLOffer.execute(buildURL);
+        }
         return v;
     }
 }

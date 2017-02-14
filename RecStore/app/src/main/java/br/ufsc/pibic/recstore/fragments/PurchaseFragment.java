@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import br.ufsc.pibic.recstore.R;
-import br.ufsc.pibic.recstore.tasks.AsyncTaskURLPurchase;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskURLPurchaseSeen;
 import br.ufsc.pibic.recstore.util.InteractionDefinition;
 
 
@@ -31,16 +31,17 @@ public class PurchaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_purchase, container, false);
 
+        View v = inflater.inflate(R.layout.fragment_purchase_seen, container, false);
         this.user_id = getArguments().getInt("user_id");
 
-        AsyncTaskURLPurchase taskURLPurchase = new AsyncTaskURLPurchase(getContext(), v);
+        AsyncTaskURLPurchaseSeen taskURLPurchase = new AsyncTaskURLPurchaseSeen(getContext(), v);
         Log.d("PURCHASE", "user: " + user_id);
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_PURCHASE, user_id);
-        taskURLPurchase.execute(buildURL);
 
+        if (!buildURL.equals("")) {
+            taskURLPurchase.execute(buildURL);
+        }
         return v;
     }
-
 }
