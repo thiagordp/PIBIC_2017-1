@@ -27,7 +27,7 @@ public class PopulateDatabase {
 		// TODO: Adicionar URL da imagem
 
 		product.append("product_id", 1);
-		product.append("product_name", "Smartphone Samsung Galaxy J7");
+		product.append("product_name", "Smartphone Samsung");
 		product.append("product_price", 2.50);
 		product.append("product_url",
 							"http://www.casasbahia-imagens.com.br/TelefoneseCelulares/Smartphones/Android/5409350/177974681/Smartphone-Samsung-Galaxy-J7-Duos-Preto-com-Dual-chip-Tela-5-5-4G-Camera-13MP-Android-5-1-e-Processador-Octa-Core-de-1-5-Ghz-5409350.jpg");
@@ -38,8 +38,24 @@ public class PopulateDatabase {
 		product.append("product_id", 2);
 		product.append("product_name", "Relógio");
 		product.append("product_price", 50.00);
+		product.append("product_url", "http://www.ablogtowatch.com/wp-content/uploads/2009/10/tissot-v8-quartz-chronograph-2009-watch.jpg");
+
+		mongo.insere(product, InteractionDefinition.PRODUCT_COLLECTION_NAME);
+		product.clear();
+
+		product.append("product_id", 3);
+		product.append("product_name", "Mouse");
+		product.append("product_price", 35.00);
 		product.append("product_url",
-							"http://www.casasbahia-imagens.com.br/Relogios/relogiosMasculinos/Analogicomasculino/9354589/698734970/Relogio-masculino-analogico-em-inox-9354589.jpg");
+							"http://compass.microsoft.com/assets/4b/d0/4bd0d69b-f194-4364-b5f7-d7bc95e795bc.jpg?n=mk_ambi_blk_large.jpg");
+
+		mongo.insere(product, InteractionDefinition.PRODUCT_COLLECTION_NAME);
+		product.clear();
+
+		product.append("product_id", 4);
+		product.append("product_name", "Mouse");
+		product.append("product_price", 15.00);
+		product.append("product_url", "http://vitrine.tokstok.com.br/pnv/570/c/citxch_vdam.jpg");
 
 		mongo.insere(product, InteractionDefinition.PRODUCT_COLLECTION_NAME);
 		product.clear();
@@ -52,7 +68,7 @@ public class PopulateDatabase {
 
 		Document purchase = new Document();
 		Random random = new Random();
-		
+
 		for (int i = 0; i < 10; i++) {
 
 			purchase.append("type", InteractionDefinition.ACTION_PURCHASE);
@@ -89,6 +105,20 @@ public class PopulateDatabase {
 		device.append("device_tech", "nfc");
 		device.append("device_mac", "03:9D:AA:F8:66:94");
 		device.append("product_id", 2);
+
+		mongo.insere(device, InteractionDefinition.DEVICE_COLLECTION_NAME);
+		device.clear();
+
+		device.append("device_tech", "nfc");
+		device.append("device_mac", "4B:84:57:E5:BB:F2");
+		device.append("product_id", 3);
+
+		mongo.insere(device, InteractionDefinition.DEVICE_COLLECTION_NAME);
+		device.clear();
+
+		device.append("device_tech", "nfc");
+		device.append("device_mac", "59:4E:E9:22:1A:D0");
+		device.append("product_id", 4);
 
 		mongo.insere(device, InteractionDefinition.DEVICE_COLLECTION_NAME);
 		device.clear();

@@ -85,6 +85,20 @@ public class Servidor {
 		// mongo.remove(document, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 		// }
 
+		// ########################################################################## //
+		// Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
+		// // PopulateDatabase.insertProducts();
+		// mongo.removeTodos(InteractionDefinition.DEVICE_COLLECTION_NAME);
+		// mongo.removeTodos(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+		// mongo.removeTodos(InteractionDefinition.INTERACTION_COLLECTION_NAME);
+		// PopulateDatabase.insertProducts();
+		// PopulateDatabase.insertPurchase();
+		// PopulateDatabase.insertDevices();
+		//
+		// return mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME).toString() + "||----------||"
+		// + mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME) + "||-----------------||"
+		// + mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+		// ######################################################################### //
 		// return "abcc123";
 
 		switch (type) {
@@ -99,7 +113,6 @@ public class Servidor {
 		default:
 			return "{}";
 		}
-
 	}
 
 	private List<String> getCollectionList() {
