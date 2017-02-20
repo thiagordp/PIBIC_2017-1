@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private String[][] nfcTechLists;
     private IntentFilter[] intentFilters;
     private Class currentFragment = null;
-    private Integer userId = 1;
+    private Integer userId = 3;
 
     private int bounded = 0;
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         initializeFragment();   // Initializes a default starting fragment
 
         ////////////////////////////////////
-        userId = 1; // TODO: pegar o user_id da tela de login
+        userId = 3; // TODO: pegar o user_id da tela de login
         // TODO: pegar o id pelos Extras da intent.
         /////////////////////////////
     }

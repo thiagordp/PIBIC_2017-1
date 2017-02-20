@@ -34,9 +34,11 @@ public class SeenFragment extends Fragment {
         AsyncTaskURLPurchaseSeen taskURLPurchase = new AsyncTaskURLPurchaseSeen(getContext(), v);
         Log.d("PURCHASE", "user: " + user_id);
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
+
         if (!buildURL.equals("")) {
             taskURLPurchase.execute(buildURL);
         }
+
         return v;
     }
 }

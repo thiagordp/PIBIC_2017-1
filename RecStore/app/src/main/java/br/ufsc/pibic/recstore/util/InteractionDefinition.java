@@ -72,7 +72,7 @@ public class InteractionDefinition {
     public static final String INTERACTION_COLLECTION_NAME = "interaction";
 
 
-    public static final String URL_PREFIX = "http://192.168.1.29:8080/RecomendacaoServer?";
+    public static final String URL_PREFIX = "http://192.168.1.24:8080/RecomendacaoServer?";
 
     public static List<String> getCollectionList() {
 
