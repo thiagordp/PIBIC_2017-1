@@ -87,7 +87,30 @@ public class PopulateDatabase {
 	}
 
 	public static void insertUsers() {
+		Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
+		Document userDoc = new Document();
+
+		userDoc.append("user_name", "Kevin M. Watkins");
+		userDoc.append("user_id", 1);
+		userDoc.append("user_address", "Rua Yole, 684");
+
+		mongo.insere(userDoc, InteractionDefinition.USER_COLLECTION_NAME);
+		userDoc.clear();
+
+		userDoc.append("user_name", "Brenda T. Powell");
+		userDoc.append("user_id", 2);
+		userDoc.append("user_address", "Rua Quatro, 1260");
+
+		mongo.insere(userDoc, InteractionDefinition.USER_COLLECTION_NAME);
+		userDoc.clear();
+
+		userDoc.append("user_name", "Sheila A. Thompson");
+		userDoc.append("user_id", 3);
+		userDoc.append("user_address", "Rua Lidia Cardoso, 747");
+
+		mongo.insere(userDoc, InteractionDefinition.USER_COLLECTION_NAME);
+		userDoc.clear();
 	}
 
 	public static void insertDevices() {

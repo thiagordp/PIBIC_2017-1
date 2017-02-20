@@ -110,6 +110,16 @@ public class Servidor {
 			return seenRequest(userId);
 		case InteractionDefinition.TYPE_URL_OFFER:
 			return offerRequest(userId);
+//		case 5: // Popular usuários
+//			PopulateDatabase.insertUsers();
+//			return "";
+//
+//		case 6:
+//			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
+//			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
+//			mongo.fechaConexao();
+//
+//			return doc.toString();
 		default:
 			return "{}";
 		}
@@ -131,7 +141,7 @@ public class Servidor {
 
 		Recomendation recomendation = new Recomendation();
 
-		return recomendation.generateRecomendation(user_id);
+		return recomendation.collaborativeFilteringRec(user_id);
 	}
 
 	/**
