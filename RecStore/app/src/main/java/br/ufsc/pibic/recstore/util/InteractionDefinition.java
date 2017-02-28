@@ -34,6 +34,11 @@ public class InteractionDefinition {
     /**
      *
      */
+    public static final int TYPE_URL_LOGIN = 5;
+
+    /**
+     *
+     */
     public static final String ACTION_SEEN = "seen";
 
     /**
@@ -72,7 +77,7 @@ public class InteractionDefinition {
     public static final String INTERACTION_COLLECTION_NAME = "interaction";
 
 
-    public static final String URL_PREFIX = "http://192.168.1.24:8080/RecomendacaoServer?";
+    public static final String URL_PREFIX = "http://192.168.0.104:8080/RecomendacaoServer?";
 
     public static List<String> getCollectionList() {
 
@@ -109,6 +114,33 @@ public class InteractionDefinition {
             stringBuilder.append(strType);
             stringBuilder.append("&user_id=");
             stringBuilder.append(strUser);
+
+            return stringBuilder.toString();
+
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String buildURL(int type, String login, String password) {
+
+        String path = URL_PREFIX;
+
+        try {
+            String strType = URLEncoder.encode(String.valueOf(type), "UTF-8");
+            String strLogin = URLEncoder.encode(String.valueOf(login), "UTF-8");
+            String strPassword = URLEncoder.encode(String.valueOf(password), "UTF-8");
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.append(path);
+            stringBuilder.append("type=");
+            stringBuilder.append(strType);
+
+            stringBuilder.append("&user_login=");
+            stringBuilder.append(strLogin);
+            stringBuilder.append("&user_password=");
+            stringBuilder.append(strPassword);
 
             return stringBuilder.toString();
 

@@ -9,8 +9,11 @@ import android.view.View;
 import android.widget.EditText;
 
 import br.ufsc.pibic.recstore.R;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskLogin;
+import br.ufsc.pibic.recstore.util.InteractionDefinition;
 
 public class LoginActivity extends AppCompatActivity {
+    private final String TAG = "LOGIN_ACT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +30,22 @@ public class LoginActivity extends AppCompatActivity {
                 try {
 //                    if (edtEmail.getText().toString().equals("pibic@gmail.com") &&
 //                            edtPassword.getText().toString().equals("pibic123")) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
+
+                    String login = edtEmail.getText().toString();
+                    String password = edtPassword.getText().toString();
+
+                    if (login.equals("labdata") && password.equals("pibic")) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                        startActivity(intent);
+                    } else {
+                        AsyncTaskLogin asyncTaskLogin = new AsyncTaskLogin(getApplicationContext(), getWindow().getDecorView().getRootView());
+                        String url = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_LOGIN, login, password);
+                        Log.d(TAG, "URL: " + url);
+                        asyncTaskLogin.execute(url);
+                    }
+
 //                    } else {
 //                        Toast.makeText(getApplicationContext(), "Login ou senha incorretos", Toast.LENGTH_SHORT).show();
 //                    }
@@ -37,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e("DEBUG", e.getMessage());
                 }
+
             }
         });
     }
