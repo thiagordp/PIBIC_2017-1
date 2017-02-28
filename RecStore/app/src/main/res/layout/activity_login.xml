@@ -42,7 +42,8 @@
             android:gravity="center"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorBlue"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:text="brendaT" />
 
         <TextView
             android:layout_width="match_parent"
@@ -61,7 +62,8 @@
             android:gravity="center"
             android:inputType="textPassword"
             android:textColor="@color/colorBlue"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:text="brtp" />
 
         <Space
             android:layout_width="match_parent"

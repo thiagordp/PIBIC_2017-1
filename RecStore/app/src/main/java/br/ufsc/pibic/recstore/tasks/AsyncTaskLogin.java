@@ -41,19 +41,20 @@ public class AsyncTaskLogin extends AsyncTask<String, Void, JSONObject> {
                 URL url = new URL(strUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                Log.d(TAG, "Verificando código de resposta");
+                Log.d(TAG, "Verificando código de resposta: " + urlConnection.getResponseCode());
 
                 if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String response = Util.convertStreamToString(urlConnection.getInputStream());
 
                     Log.d(TAG, "Resposta: " + response);
-                    http:
+
 //localhost:8080/RecomendacaoServer?user_id=2&type=4
                     return new JSONObject(response);
                 }
 
 
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -72,6 +73,13 @@ public class AsyncTaskLogin extends AsyncTask<String, Void, JSONObject> {
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+                String user = jsonObject.getString("user_id");
+                Log.d(TAG, "User string before:" + user);
+                user = user.replace("[","").replace("]","");
+
+                Log.d(TAG, "User string after:" + user);
+                int user_id = Integer.valueOf(user);
+                intent.putExtra("user_id", user_id);
                 context.startActivity(intent);
             } else {
                 Toast.makeText(context, "Login e/ou senha inválidos!\nTente novamente!", Toast.LENGTH_LONG).show();

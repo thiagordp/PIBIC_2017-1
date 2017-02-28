@@ -51,7 +51,7 @@ public class Util {
 
     public static String createURLBeacon(Beacon beacon, int userId) {
         String user_id = String.valueOf(userId);
-        String type = String.valueOf(InteractionDefinition.TYPE_URL_SEEN);
+        String type = String.valueOf(InteractionDefinition.TYPE_URL_RECORD);
         String device_tech = String.valueOf(InteractionDefinition.DEVICE_BEACON);
         String device_mac = beacon.getBluetoothAddress();
         String beacon_major = beacon.getId2().toString();
@@ -59,6 +59,7 @@ public class Util {
         String beacon_rssi = String.valueOf(beacon.getRssi());
 
         Log.d("DEBUG", "Montando URL BEACON...");
+        Log.d("DEBUG", "MAC: " + device_mac + "\tmajor: " + beacon_major + "\tminor: " + beacon_minor + "\trssi: " + beacon_rssi);
 
         try {
             user_id = URLEncoder.encode(user_id, "UTF-8");
@@ -71,16 +72,16 @@ public class Util {
             beacon_rssi = URLEncoder.encode(beacon_rssi, "UTF-8");
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         StringBuilder stringBuilder = new StringBuilder();
 
         // TODO: Pegar o caminho certo para o servidor depois.
-        String path = "http://localhost:8080/RecomendacaoServer"; // Provisório
+        String path = InteractionDefinition.URL_PREFIX; // Provisório
 
         stringBuilder.append(path);
-        stringBuilder.append("?user_id=");
+        stringBuilder.append("user_id=");
         stringBuilder.append(user_id);
         stringBuilder.append("&type=");
         stringBuilder.append(type);
@@ -94,6 +95,7 @@ public class Util {
         stringBuilder.append(beacon_minor);
         stringBuilder.append("&beacon_rssi=");
         stringBuilder.append(beacon_rssi);
+        Log.d("DEBUG", "URL: " + stringBuilder.toString());
 
         return stringBuilder.toString();
     }

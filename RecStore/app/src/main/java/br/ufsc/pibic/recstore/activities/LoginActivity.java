@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (login.equals("labdata") && password.equals("pibic")) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
+                        intent.putExtra("user_id", 1);
                         startActivity(intent);
                     } else {
                         AsyncTaskLogin asyncTaskLogin = new AsyncTaskLogin(getApplicationContext(), getWindow().getDecorView().getRootView());

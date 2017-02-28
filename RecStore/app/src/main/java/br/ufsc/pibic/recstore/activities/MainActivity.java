@@ -45,6 +45,7 @@ import br.ufsc.pibic.recstore.util.Util;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BeaconConsumer {
 
+    private final String TAG = "MAIN_ACT";
     private BeaconManager beaconManager;
     private PendingIntent pendingIntent;
     private int detected = 0;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private String[][] nfcTechLists;
     private IntentFilter[] intentFilters;
     private Class currentFragment = null;
-    private Integer userId = 3;
+    private Integer userId = 1;
 
     private int bounded = 0;
 
@@ -78,8 +79,13 @@ public class MainActivity extends AppCompatActivity
         initializeFragment();   // Initializes a default starting fragment
 
         ////////////////////////////////////
-        userId = 3; // TODO: pegar o user_id da tela de login
+        // userId = 3; // TODO: pegar o user_id da tela de login
         // TODO: pegar o id pelos Extras da intent.
+
+        Intent intent = getIntent();
+        this.userId = intent.getIntExtra("user_id", -1);
+
+        Log.d(TAG, "User_id from intent: " + this.userId);
         /////////////////////////////
     }
 
