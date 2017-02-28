@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import com.sun.research.ws.wadl.Doc;
 
@@ -30,7 +31,8 @@ public class Servidor {
 	public String recordRequest(@QueryParam("user_id") Integer userId, @QueryParam("type") Integer type,
 						@QueryParam("device_tech") Integer deviceTech, @QueryParam("device_mac") String deviceMac,
 						@QueryParam("beacon_minor") Integer beaconMinor, @QueryParam("beacon_major") Integer beaconMajor,
-						@QueryParam("beacon_rssi") Integer beaconRssi) {
+						@QueryParam("beacon_rssi") Integer beaconRssi, @QueryParam("user_login") String userLogin,
+						@QueryParam("user_password") String userPassword) {
 
 		if (type == null) {
 			return "{}";
@@ -110,16 +112,32 @@ public class Servidor {
 			return seenRequest(userId);
 		case InteractionDefinition.TYPE_URL_OFFER:
 			return offerRequest(userId);
-//		case 5: // Popular usuários
-//			PopulateDatabase.insertUsers();
-//			return "";
-//
-//		case 6:
-//			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
-//			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
-//			mongo.fechaConexao();
-//
-//			return doc.toString();
+		case InteractionDefinition.TYPE_URL_LOGIN:
+			return loginRequest(userLogin, userPassword);
+		case 10:
+			String ret = "";
+			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
+
+			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
+			ret += doc + "\r\n\r\n";
+			mongo.removeTodos(InteractionDefinition.USER_COLLECTION_NAME);
+			doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
+
+			ret += doc + "\r\n\r\n";
+			PopulateDatabase.insertUsers();
+			doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
+
+			ret += doc + "\r\n\r\n";
+			mongo.fechaConexao();
+
+			return ret;
+
+		// case 5: // Popular usuários
+		// PopulateDatabase.insertUsers();
+		// return "";
+		//
+		// case 6:
+
 		default:
 			return "{}";
 		}
@@ -135,6 +153,29 @@ public class Servidor {
 		lista.add(InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		return lista;
+	}
+
+	public String loginRequest(String login, String password) {
+
+		Mongo mongodb = new Mongo("pibic", getCollectionList());
+		Document document = new Document();
+		document.append("user_login", login);
+		document.append("user_password", password);
+
+		List<Document> listUser = mongodb.procura(document, InteractionDefinition.USER_COLLECTION_NAME);
+
+		JSONObject json = new JSONObject();
+		try {
+			if (listUser.size() > 0) {
+				json.append("result", "granted");
+			} else {
+				json.append("result", "denied");
+			}
+		} catch (Exception e) {
+
+		}
+
+		return json.toString();
 	}
 
 	public String offerRequest(Integer user_id) {

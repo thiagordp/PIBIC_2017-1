@@ -92,6 +92,8 @@ public class PopulateDatabase {
 		Document userDoc = new Document();
 
 		userDoc.append("user_name", "Kevin M. Watkins");
+		userDoc.append("user_login", "kevin");
+		userDoc.append("user_password", "yole123");
 		userDoc.append("user_id", 1);
 		userDoc.append("user_address", "Rua Yole, 684");
 
@@ -99,6 +101,8 @@ public class PopulateDatabase {
 		userDoc.clear();
 
 		userDoc.append("user_name", "Brenda T. Powell");
+		userDoc.append("user_login", "brendaT");
+		userDoc.append("user_password", "brtp");
 		userDoc.append("user_id", 2);
 		userDoc.append("user_address", "Rua Quatro, 1260");
 
@@ -106,6 +110,8 @@ public class PopulateDatabase {
 		userDoc.clear();
 
 		userDoc.append("user_name", "Sheila A. Thompson");
+		userDoc.append("user_login", "sheilathompson");
+		userDoc.append("user_password", "thompson321");
 		userDoc.append("user_id", 3);
 		userDoc.append("user_address", "Rua Lidia Cardoso, 747");
 

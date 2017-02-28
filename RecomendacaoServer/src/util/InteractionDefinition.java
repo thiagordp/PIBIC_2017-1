@@ -32,6 +32,11 @@ public class InteractionDefinition {
 	public static final int TYPE_URL_OFFER = 4;
 
 	/**
+	 * 
+	 */
+	public static final int TYPE_URL_LOGIN = 5;
+
+	/**
 	 *
 	 */
 	public static final String ACTION_SEEN = "seen";
@@ -71,7 +76,6 @@ public class InteractionDefinition {
 	 */
 	public static final String INTERACTION_COLLECTION_NAME = "interaction";
 
-	
 	public static List<String> getCollectionList() {
 
 		List<String> lista = new ArrayList<>();
