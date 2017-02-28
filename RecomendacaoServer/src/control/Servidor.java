@@ -118,16 +118,23 @@ public class Servidor {
 			String ret = "";
 			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
-			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
-			ret += doc + "\r\n\r\n";
-			mongo.removeTodos(InteractionDefinition.USER_COLLECTION_NAME);
-			doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
+			List<Document> doc = mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			ret += doc + "\t\t-----------------\t\t";
+			mongo.removeTodos(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			doc = mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			ret += doc + "\t\t-----------------\t\t";
+			PopulateDatabase.insertProducts();
+			doc = mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			ret += doc + "\t\txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\t\t";
 
-			ret += doc + "\r\n\r\n";
-			PopulateDatabase.insertUsers();
-			doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
-
-			ret += doc + "\r\n\r\n";
+			doc = mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME);
+			ret += doc + "\t\t-----------------\t\t";
+			mongo.removeTodos(InteractionDefinition.DEVICE_COLLECTION_NAME);
+			doc = mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME);
+			ret += doc + "\t\t-----------------\t\t";
+			PopulateDatabase.insertDevices();
+			doc = mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME);
+			ret += doc + "\t\t-----------------\t\t";
 			mongo.fechaConexao();
 
 			return ret;
@@ -167,7 +174,10 @@ public class Servidor {
 		JSONObject json = new JSONObject();
 		try {
 			if (listUser.size() > 0) {
+				int user_id = listUser.get(0).getInteger("user_id");
+
 				json.append("result", "granted");
+				json.append("user_id", user_id);
 			} else {
 				json.append("result", "denied");
 			}
@@ -202,7 +212,7 @@ public class Servidor {
 		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
-			return "{\"products\":[]}";
+			return JsonConverter.productListToJson(null);
 		}
 
 		List<Document> listSeenProduct = new ArrayList<>();
@@ -242,7 +252,7 @@ public class Servidor {
 		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
-			return "{\"nointeraction\":0}";
+			return JsonConverter.productListToJson(null);
 		}
 
 		List<Document> listSeenProduct = new ArrayList<>();

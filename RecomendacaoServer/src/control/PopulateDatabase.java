@@ -53,9 +53,17 @@ public class PopulateDatabase {
 		product.clear();
 
 		product.append("product_id", 4);
-		product.append("product_name", "Mouse");
+		product.append("product_name", "Xícara");
 		product.append("product_price", 15.00);
 		product.append("product_url", "http://vitrine.tokstok.com.br/pnv/570/c/citxch_vdam.jpg");
+
+		mongo.insere(product, InteractionDefinition.PRODUCT_COLLECTION_NAME);
+		product.clear();
+
+		product.append("product_id", 5);
+		product.append("product_name", "Telescópio");
+		product.append("product_price", 1359.90);
+		product.append("product_url", "http://www.universetoday.com/wp-content/uploads/2012/08/21048_2008powerseeker_large_1.jpg");
 
 		mongo.insere(product, InteractionDefinition.PRODUCT_COLLECTION_NAME);
 		product.clear();
@@ -152,6 +160,15 @@ public class PopulateDatabase {
 		mongo.insere(device, InteractionDefinition.DEVICE_COLLECTION_NAME);
 		device.clear();
 
+		device.append("device_tech", "beacon");
+		device.append("device_mac", "20:91:48:07:08:3F");
+		device.append("product_id", 5);
+		device.append("beacon_major", 10006);
+		device.append("beacon_minor", 48408);
+
+		mongo.insere(device, InteractionDefinition.DEVICE_COLLECTION_NAME);
+		device.clear();
+		// 20:91:48:07:08:3F
 		mongo.fechaConexao();
 	}
 
