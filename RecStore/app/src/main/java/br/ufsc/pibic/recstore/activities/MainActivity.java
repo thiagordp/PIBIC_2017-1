@@ -33,6 +33,8 @@ import org.altbeacon.beacon.Region;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import br.ufsc.pibic.recstore.R;
 import br.ufsc.pibic.recstore.fragments.OffersFragment;
@@ -45,17 +47,22 @@ import br.ufsc.pibic.recstore.util.Util;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BeaconConsumer {
 
-    private final String TAG = "MAIN_ACT";
+    private Beacon lastBeacon = null;
     private BeaconManager beaconManager;
-    private PendingIntent pendingIntent;
-    private int detected = 0;
-    private NfcAdapter nfcAdapter;
-    private String[][] nfcTechLists;
-    private IntentFilter[] intentFilters;
+    private boolean timePassed = false;
+    private boolean timerStarted = false;
     private Class currentFragment = null;
-    private Integer userId = 1;
-
+    private double lastDistance = -1.0;
+    private final String TAG = "MAIN_ACT";
     private int bounded = 0;
+    private int detected = 0;
+    private Integer userId = 1;
+    private IntentFilter[] intentFilters;
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private Region region = null;
+    private String[][] nfcTechLists;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "User_id from intent: " + this.userId);
         /////////////////////////////
+        timer = new Timer();
     }
 
     /**
@@ -105,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
             // Configuração do bluetooth
             beaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
-            beaconManager.setBackgroundMode(true);
+            beaconManager.setBackgroundMode(false);
             beaconManager.setBackgroundScanPeriod(1000L);
             beaconManager.setBackgroundBetweenScanPeriod(1000L);
             beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
@@ -196,20 +204,51 @@ public class MainActivity extends AppCompatActivity
 
                     Log.d("DEBUG", collection.size() + " Beacon(s) encontrado(s)!");
 
-
                     for (Beacon beacon : collection) {
-                        Log.d("DEBUG", beacon.getBluetoothName() + "||" + beacon.getId1() + "||" + beacon.getRssi());
+                        Log.d("DEBUG_MAIN_ACT", "Beacon info:" + beacon.getBluetoothName() + "||" + beacon.getId1() + "||" + beacon.getId2() + "||" + beacon.getId3() + "||" + beacon.getBluetoothAddress() + "||" + beacon.getDistance() + "||" + beacon.getRssi());
+
+                        if (timePassed &&
+                                (beacon.getId1().equals(lastBeacon.getId1()))/* &&
+                               (beacon.getDistance() > lastBeacon.getDistance() * 0.9 ||
+                                        beacon.getDistance() < lastBeacon.getDistance() * 1.1)*/) {
+
+                            Log.d(TAG, "Starting beacon act");
+
+                            String url = Util.createURLBeacon(beacon, userId);
+                            Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
+                            //intentAct.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intentAct.putExtra("url", url);
+
+                            timerStarted = false;
 
 
-                        String url = Util.createURLBeacon(beacon, userId);
-                        Intent intentAct = new Intent(getApplicationContext(), InteractionActivity.class);
-                        //intentAct.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intentAct.putExtra("url", url);
+                            startActivity(intentAct);
 
-                        startActivity(intentAct);
-                        break;
+                            timePassed = false;
+
+                        } else if (!timerStarted) {
+                            Log.d(TAG, "Starting timer");
+                            lastBeacon = beacon;
+                            lastDistance = beacon.getDistance();
+
+                            TimerTask timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        timePassed = true;
+                                        Log.d(TAG, "Timer finished");
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.getMessage());
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            timer.schedule(timerTask, InteractionDefinition.getTime()); // Executará uma vez após 30 segundos
+                            Log.d(TAG, "Timer started");
+                            timerStarted = true;
+                            timePassed = false;
+                        }
                     }
-                    detected = 1;
                 }
             }
         });
@@ -217,8 +256,10 @@ public class MainActivity extends AppCompatActivity
         try {
             // Inicia o monitoramento
             Log.d("DEBUG", "Iniciando monitoramento.");
-            beaconManager.startRangingBeaconsInRegion(new Region("REGION", null, null, null));
-            beaconManager.startMonitoringBeaconsInRegion(new Region("REGION", null, null, null));
+
+            this.region = new Region("REGION", null, null, null);
+            beaconManager.startRangingBeaconsInRegion(this.region);
+            beaconManager.startMonitoringBeaconsInRegion(this.region);
         } catch (RemoteException e) {
             Log.d("DEBUG", e.getMessage());
         }
@@ -237,6 +278,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+
         if (nfcAdapter != null)
             nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, nfcTechLists);
     }
@@ -306,7 +349,6 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
-
 
     /**
      * Inicializa a fragment que será mostrada logo na inicialização do app.

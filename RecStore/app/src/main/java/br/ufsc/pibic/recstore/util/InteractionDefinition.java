@@ -1,6 +1,15 @@
 package br.ufsc.pibic.recstore.util;
 
 
+import android.util.Log;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -76,8 +85,11 @@ public class InteractionDefinition {
      */
     public static final String INTERACTION_COLLECTION_NAME = "interaction";
 
+    public static String ip_server = getIp();
 
-    public static final String URL_PREFIX = "http://192.168.0.104:8080/RecomendacaoServer?";
+    public static int timeBLE = getTime();
+
+    public static String URL_PREFIX = "http://" + ip_server + ":8080/RecomendacaoServer?";
 
     public static List<String> getCollectionList() {
 
@@ -91,6 +103,118 @@ public class InteractionDefinition {
         return lista;
     }
 
+    public static void setTime(Integer time) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
+
+            byte[] dados = new byte[fileInputStream.available()];
+
+            fileInputStream.read(dados, 0, dados.length);
+            fileInputStream.close();
+
+            String text = new String(dados, 0, dados.length, "UTF-8");
+            JSONObject json = new JSONObject(text);
+            Log.d("JSON", json.toString());
+
+            json.put("time", time);
+            timeBLE = time;
+
+            FileOutputStream fileOutputStream = new FileOutputStream(Util.CONFIG_PATH);
+            dados = json.toString().getBytes();
+            fileOutputStream.write(dados, 0, dados.length);
+
+
+        } catch (JSONException e) {
+            //Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            //Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    public static int getTime() {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
+
+            byte[] dados = new byte[fileInputStream.available()];
+
+            fileInputStream.read(dados, 0, dados.length);
+            fileInputStream.close();
+
+            String text = new String(dados, 0, dados.length, "UTF-8");
+            JSONObject json = new JSONObject(text);
+            Log.d("JSON", json.toString());
+
+            return json.getInt("time");
+
+        } catch (JSONException e) {
+            //   Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            //  Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        return 10;
+    }
+
+    public static void setIp(String ip) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
+
+            byte[] dados = new byte[fileInputStream.available()];
+
+            fileInputStream.read(dados, 0, dados.length);
+            fileInputStream.close();
+
+            String text = new String(dados, 0, dados.length, "UTF-8");
+            JSONObject json = new JSONObject(text);
+            Log.d("JSON", json.toString());
+
+            json.put("ipserver", ip);
+            ip_server = ip;
+
+            FileOutputStream fileOutputStream = new FileOutputStream(Util.CONFIG_PATH);
+            dados = json.toString().getBytes();
+            fileOutputStream.write(dados, 0, dados.length);
+
+
+        } catch (JSONException e) {
+            //   Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            //  Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    public static String getIp() {
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
+
+            byte[] dados = new byte[fileInputStream.available()];
+
+            fileInputStream.read(dados, 0, dados.length);
+            fileInputStream.close();
+
+            String text = new String(dados, 0, dados.length, "UTF-8");
+            JSONObject json = new JSONObject(text);
+            Log.d("JSON", json.toString());
+
+            return json.getString("ipserver");
+
+        } catch (JSONException e) {
+            //   Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            //   Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+
+        return "10.0.0.1";
+    }
 
     /**
      * Construir URL a partir dos parâmetros informados

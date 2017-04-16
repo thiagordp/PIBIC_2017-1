@@ -1,5 +1,6 @@
 package br.ufsc.pibic.recstore.util;
 
+import android.os.Environment;
 import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
@@ -12,8 +13,10 @@ import java.net.URLEncoder;
 /**
  * Created by trdp on 2/3/17.
  */
-
 public class Util {
+
+    public final static String CONFIG_PATH = Environment.getExternalStorageDirectory().toString() + "/conf.dat";
+
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
@@ -21,6 +24,7 @@ public class Util {
 
     public static JSONArray parserJason(String json) {
         try {
+
             Log.d("JSON", "JSON: " + json);
 
             Log.d("JSON", "Criando objeto");

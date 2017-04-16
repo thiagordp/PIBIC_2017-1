@@ -5,6 +5,8 @@
     <!-- ================================================================ -->
     <!-- Requisição para uso do NFC -->
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Requisição para uso da Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Requisição para uso do Bluetooth -->
@@ -45,7 +47,9 @@
         <activity
             android:name=".activities.InteractionActivity"
             android:label="@string/title_activity_interaction"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
     </application>
 
 </manifest>

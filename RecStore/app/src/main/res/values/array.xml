@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="spinnerItems">
+        <item>192.168.1.33</item>
+        <item>10.0.0.101</item>
+    </string-array>
+
+</resources>

@@ -28,4 +28,5 @@ public class InteractionActivity extends AppCompatActivity {
 
         taskURLBeacon.execute(url);
     }
+
 }
