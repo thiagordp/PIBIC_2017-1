@@ -47,6 +47,7 @@ public class SettingsFragment extends Fragment {
         final FloatingActionButton button = (FloatingActionButton) v.findViewById(R.id.btn_save_cfg);
         seekBar.setProgress(InteractionDefinition.getTime());
 
+        editText.setText(InteractionDefinition.getIp());
         String x = seekBar.getProgress() + " segundo(s)";
         textView.setText(x);
 

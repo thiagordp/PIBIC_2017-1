@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import br.ufsc.pibic.recstore.R;
@@ -23,6 +24,14 @@ public class LoginActivity extends AppCompatActivity {
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_login);
         final EditText edtEmail = (EditText) findViewById(R.id.edtEmail);
         final EditText edtPassword = (EditText) findViewById(R.id.edtPassword);
+        final Button btnCfg = (Button) findViewById(R.id.btn_cfg);
+
+        btnCfg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ConfigActivity.class));
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

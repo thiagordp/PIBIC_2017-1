@@ -41,9 +41,9 @@
             android:background="@android:color/background_light"
             android:gravity="center"
             android:inputType="textEmailAddress"
+            android:text="brendaT"
             android:textColor="@color/colorBlue"
-            android:textSize="20sp"
-            android:text="brendaT" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -61,9 +61,9 @@
             android:background="@android:color/background_light"
             android:gravity="center"
             android:inputType="textPassword"
+            android:text="brtp"
             android:textColor="@color/colorBlue"
-            android:textSize="20sp"
-            android:text="brtp" />
+            android:textSize="20sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -80,5 +80,13 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/btn_cfg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Cfg" />
+
     </LinearLayout>
 </ScrollView>
