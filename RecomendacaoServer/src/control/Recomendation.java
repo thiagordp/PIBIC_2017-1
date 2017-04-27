@@ -19,8 +19,7 @@ import util.InteractionDefinition;
 import util.JsonConverter;
 
 /**
- * @author Thiago Raulino Dal Pont
- *         Fornece recomendacao ao usuário
+ * @author Thiago Raulino Dal Pont Fornece recomendacao ao usuário
  */
 public class Recomendation {
 
@@ -36,19 +35,25 @@ public class Recomendation {
 			Document document = listDoc.get(i);
 
 			listProd.addAll(mongodb.procura("product_id", (Integer) document.get("product_id"),
-								InteractionDefinition.PRODUCT_COLLECTION_NAME));
+					InteractionDefinition.PRODUCT_COLLECTION_NAME));
 		}
 
 		removeDuplicate(listProd);
 
 		// /////////////////////////
 		// listProd.clear();
-		// listProd.add(new Document().append("product_id", "Notebook").append("_id", 1));
-		// listProd.add(new Document().append("product_id", "Fone").append("_id", 2));
-		// listProd.add(new Document().append("product_id", "Guitarra").append("_id", 3));
-		// listProd.add(new Document().append("product_id", "Chave").append("_id", 4));
-		// listProd.add(new Document().append("product_id", "Cabo de rede").append("_id", 5));
-		// listProd.add(new Document().append("product_id", "Cano").append("_id", 6));
+		// listProd.add(new Document().append("product_id",
+		// "Notebook").append("_id", 1));
+		// listProd.add(new Document().append("product_id",
+		// "Fone").append("_id", 2));
+		// listProd.add(new Document().append("product_id",
+		// "Guitarra").append("_id", 3));
+		// listProd.add(new Document().append("product_id",
+		// "Chave").append("_id", 4));
+		// listProd.add(new Document().append("product_id", "Cabo de
+		// rede").append("_id", 5));
+		// listProd.add(new Document().append("product_id",
+		// "Cano").append("_id", 6));
 		// /////////////////////
 
 		if (listProd.size() < 5) {
@@ -76,11 +81,11 @@ public class Recomendation {
 	public String collaborativeFilteringRec(Integer userId) {
 
 		String debug = "";
-
+		Mongo mongo = null;
 		debug += (":::init:::");
 
 		try {
-			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
+			mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
 			debug += (":::Start:::");
 
@@ -105,15 +110,18 @@ public class Recomendation {
 			debug += ("After hash1:::");
 			List<Double> listAngle = new ArrayList<>();
 
-			// Selecionar todas as pessoas que têm pelo menos um produto interagido em comum
+			// Selecionar todas as pessoas que têm pelo menos um produto
+			// interagido em comum
 			debug += ("Before find userInt:::");
-			List<Document> userIntList = mongo.procura(new Document("user_id", userId), InteractionDefinition.INTERACTION_COLLECTION_NAME);
+			List<Document> userIntList = mongo.procura(new Document("user_id", userId),
+					InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 			debug += ("Before find fullInt:::");
 			List<Document> fullIntList = mongo.listaRegistros(InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 			debug += ("Before remove commom:::");
-			fullIntList.removeAll(userIntList); // Garante que só resta outros usuários nas interações.
+			fullIntList.removeAll(userIntList); // Garante que só resta outros
+												// usuários nas interações.
 
 			List<Document> resultList = new ArrayList<>();
 
@@ -137,12 +145,14 @@ public class Recomendation {
 			debug += ("After find for:::");
 			if (resultList.isEmpty()) {
 				debug += ("null:::");
-				return JsonConverter.productListToJson(null); // Retorna um json vazio.
+				return JsonConverter.productListToJson(null); // Retorna um json
+																// vazio.
 			}
 
 			debug += ("Before cosine for:::");
 
-			// TODO: Calcular o ângulo do usuário em relação a cada uma dessas pessoas.
+			// TODO: Calcular o ângulo do usuário em relação a cada uma dessas
+			// pessoas.
 			for (Document resultDoc : resultList) {
 				int userIdQuery = Integer.valueOf(resultDoc.getInteger("user_id"));
 
@@ -178,7 +188,8 @@ public class Recomendation {
 
 			debug += ("Before pick best matches for:::");
 
-			// TODO: para cada usuário na lista final, gerar recomendações com base em subtração de conjustos
+			// TODO: para cada usuário na lista final, gerar recomendações com
+			// base em subtração de conjustos
 			for (int j = 0; j < listAngle.size() && j < recomendationCount; j++) {
 				max = listAngle.get(0); // Inicializa com o primeiro
 
@@ -223,10 +234,16 @@ public class Recomendation {
 
 			return JsonConverter.productListToJson(resultList);
 
-			// TODO: OPT: níveis de interesse conforme o tipo de interação (beacon, nfc)
+			// TODO: OPT: níveis de interesse conforme o tipo de interação
+			// (beacon, nfc)
 		} catch (Exception e) {
 			debug += (e.getMessage() + ":::");
 		}
+
+		if (mongo != null) {
+			mongo.fechaConexao();
+		}
+
 		// return debug;
 		return JsonConverter.productListToJson(null);
 	}
@@ -274,7 +291,7 @@ public class Recomendation {
 
 		for (Document document : listProductUser2) {
 			List<Document> listDoc = mongodb.procura("product_id", document.get("product_id"),
-								InteractionDefinition.PRODUCT_COLLECTION_NAME);
+					InteractionDefinition.PRODUCT_COLLECTION_NAME);
 
 			list.addAll(listDoc);
 		}
@@ -298,20 +315,22 @@ public class Recomendation {
 
 		for (Document document : list) {
 			map.put(document.getInteger("product_id"), 1);
-			// listQueryResult.add(new Document("product_id", document.get("product_id")));
+			// listQueryResult.add(new Document("product_id",
+			// document.get("product_id")));
 		}
 
 		// for (Document document : listQueryResult) {
 		// map.put(document.getInteger("product_id"), 1);
 		// }
-
+		mongodb.fechaConexao();
 		return map;
 	}
 
 	private Double calculateCosine(Map<Integer, Integer> hashP1, Map<Integer, Integer> hashP2) {
 
 		double sumNumerator = 0; // Soma do numerador da fórmula
-		double sumDenominator1 = 0, sumDenominator2 = 0; // Soma do denominador na fórmula.
+		double sumDenominator1 = 0, sumDenominator2 = 0; // Soma do denominador
+															// na fórmula.
 
 		boolean contains = false;
 
@@ -320,7 +339,12 @@ public class Recomendation {
 		for (Integer key1 : hashP1.keySet()) {
 			if (hashP2.containsKey(key1)) {
 				// Cálculo do produto escalar
-				sumNumerator += hashP1.get(key1) * hashP2.get(key1); // produto de cada componente dos vetores
+				sumNumerator += hashP1.get(key1) * hashP2.get(key1); // produto
+																		// de
+																		// cada
+																		// componente
+																		// dos
+																		// vetores
 				contains = true;
 			}
 
@@ -349,7 +373,7 @@ public class Recomendation {
 
 				// Se o hash ou o product_id forem iguais remove.
 				if (document.get("_id").toString().equals(doc2.get("_id").toString())
-									|| document.get("product_id").toString().equals(doc2.get("product_id").toString())) {
+						|| document.get("product_id").toString().equals(doc2.get("product_id").toString())) {
 					listDocument.remove(j);
 				}
 			}

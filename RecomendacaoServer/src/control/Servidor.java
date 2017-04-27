@@ -23,7 +23,6 @@ import org.json.JSONObject;
 import util.InteractionDefinition;
 import util.JsonConverter;
 
-
 @Path("/")
 public class Servidor {
 
@@ -193,8 +192,6 @@ public class Servidor {
 						 * "\t\t-----------------\t\t";
 						 */
 
-			
-
 		// case 5: // Popular usuários
 		// PopulateDatabase.insertUsers();
 		// return "";
@@ -242,6 +239,7 @@ public class Servidor {
 
 		}
 
+		mongodb.fechaConexao();
 		return json.toString();
 	}
 
@@ -454,6 +452,7 @@ public class Servidor {
 		// inserir no banco a interação.
 		mongodb.insere(record, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
+		mongodb.fechaConexao();
 		// Retorna o JSON
 		return produto.toJson();
 	}

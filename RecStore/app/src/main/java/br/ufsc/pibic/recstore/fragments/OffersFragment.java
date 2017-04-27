@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import br.ufsc.pibic.recstore.R;
 import br.ufsc.pibic.recstore.tasks.AsyncTaskURLOffer;
@@ -15,18 +16,22 @@ import br.ufsc.pibic.recstore.util.InteractionDefinition;
 public class OffersFragment extends Fragment {
     private ListView listView;
     private Integer user_id;
+    private View view = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_offers, container, false);
 
+        View v = inflater.inflate(R.layout.fragment_offers, container, false);
+        this.view = v;
         this.user_id = getArguments().getInt("user_id"); // Recebe a identificação do usuário.
 
         AsyncTaskURLOffer taskURLOffer = new AsyncTaskURLOffer(getContext(), v);

@@ -243,7 +243,8 @@ public class MainActivity extends AppCompatActivity
                                     }
                                 }
                             };
-                            timer.schedule(timerTask, InteractionDefinition.getTime()); // Executará uma vez após 30 segundos
+                            Log.d("TIMER", "Time: " + InteractionDefinition.getTime());
+                            timer.schedule(timerTask, InteractionDefinition.getTime()*1000); // Executará uma vez após X segundos
                             Log.d(TAG, "Timer started");
                             timerStarted = true;
                             timePassed = false;

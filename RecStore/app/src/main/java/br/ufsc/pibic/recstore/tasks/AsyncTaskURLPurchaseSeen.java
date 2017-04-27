@@ -110,6 +110,7 @@ public class AsyncTaskURLPurchaseSeen extends AsyncTask<String, Void, JSONArray>
             listView = (ListView) view.findViewById(R.id.lvPurchaseSeen);
             Log.d("ASYNC_OFFER", "ListView: " + listView);
             CustomList customList = new CustomList((Activity) context, nome, id, data, url);
+            listView.setAdapter(null);
             listView.setAdapter(customList);
         }
     }

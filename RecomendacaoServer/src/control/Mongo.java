@@ -73,6 +73,7 @@ public class Mongo {
 	 */
 	public void fechaConexao() {
 		verificaInstancias();
+		
 		mongoClient.close();
 	}
 
