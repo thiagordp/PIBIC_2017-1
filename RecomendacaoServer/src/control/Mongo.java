@@ -59,8 +59,9 @@ public class Mongo {
 				collectionString.concat("|" + collection);
 			}
 
-			throw new NullPointerException("NullPointer\nVerifique se todos os parâmetros foram instanciados corretamente\nCliente: "
-								+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeções:" + collectionString);
+			throw new NullPointerException(
+					"NullPointer\nVerifique se todos os parâmetros foram instanciados corretamente\nCliente: "
+							+ mongoClient + "\tBanco:" + mongoDatabase + "\tColeções:" + collectionString);
 		}
 	}
 
@@ -73,7 +74,7 @@ public class Mongo {
 	 */
 	public void fechaConexao() {
 		verificaInstancias();
-		
+
 		mongoClient.close();
 	}
 
@@ -122,7 +123,8 @@ public class Mongo {
 
 		List<Document> documents = new ArrayList<>();
 
-		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection)).find(documento);
+		FindIterable<Document> iterable = mongoCollections.get(findCollection(mongoCollections, collection))
+				.find(documento);
 
 		iterable.forEach(new Block<Document>() {
 			@Override

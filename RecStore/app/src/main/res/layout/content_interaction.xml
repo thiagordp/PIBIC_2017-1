@@ -27,11 +27,12 @@
         android:layout_weight="1">
 
         <TableRow>
+
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
                 android:layout_weight="1"
+                android:gravity="end"
                 android:padding="10dp"
                 android:text="Código"
                 android:textSize="18sp"

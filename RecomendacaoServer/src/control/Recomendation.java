@@ -5,7 +5,6 @@ package control;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +79,7 @@ public class Recomendation {
 
 	public String collaborativeFilteringRec(Integer userId) {
 
+		@SuppressWarnings("unused")
 		String debug = "";
 		Mongo mongo = null;
 		debug += (":::init:::");
@@ -126,17 +126,18 @@ public class Recomendation {
 			List<Document> resultList = new ArrayList<>();
 
 			debug += ("Before find for:::");
-			// TODO: Melhorar
+
+			// Resgate dos usuários que interagiram com pelo menos um produto
+			// que o usuário atual também o fez.
 			for (Document docUser : userIntList) {
 				for (Document docFull : fullIntList) {
-
 					if (docUser.get("product_id").toString().equals(docFull.get("product_id").toString())) {
-
 						resultList.add(new Document("user_id", docFull.get("user_id")));
 					}
 				}
 			}
 
+			// Remoção de registros duplicados
 			Set<Document> removeDupl = new HashSet<>();
 			removeDupl.addAll(resultList);
 			resultList.clear();
@@ -160,24 +161,16 @@ public class Recomendation {
 			}
 
 			debug += "#####" + listAngle.toString() + "####";
-			listAngle.sort(new Comparator<Double>() {
-
-				@Override
-				public int compare(Double o1, Double o2) {
-
-					if (o1 < o2)
-						return -1;
-					if (o1 > o2)
-						return 1;
-
-					return 0;
-				}
-			});
+			/*
+			 * listAngle.sort(new Comparator<Double>() {
+			 * 
+			 * @Override public int compare(Double o1, Double o2) {
+			 * 
+			 * if (o1 < o2) return -1; if (o1 > o2) return 1;
+			 * 
+			 * return 0; } }, Collections.reverseOrder());
+			 */
 			debug += ("After cosine for:::");
-
-			// TODO: Para cada usuário que será selecionado,
-			// - pegar o usuário no topo da lista;
-			// - remover esse usuário da lista.
 
 			Random random = new Random();
 
@@ -231,6 +224,7 @@ public class Recomendation {
 			// return debug;
 
 			// TODO: retornar a lista com até x produtos para recomendação
+			mongo.fechaConexao();
 
 			return JsonConverter.productListToJson(resultList);
 
@@ -310,6 +304,7 @@ public class Recomendation {
 		// List<Document> listQueryResult = new ArrayList<>();
 
 		if (list.isEmpty()) {
+			mongodb.fechaConexao();
 			return map;
 		}
 

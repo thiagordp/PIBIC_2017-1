@@ -85,16 +85,21 @@ public class MainActivity extends AppCompatActivity
         nfcSetup();             // Runs setup commands for NFC.
         initializeFragment();   // Initializes a default starting fragment
 
-        ////////////////////////////////////
-        // userId = 3; // TODO: pegar o user_id da tela de login
-        // TODO: pegar o id pelos Extras da intent.
-
         Intent intent = getIntent();
         this.userId = intent.getIntExtra("user_id", -1);
 
         Log.d(TAG, "User_id from intent: " + this.userId);
         /////////////////////////////
         timer = new Timer();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (this.beaconManager != null) {
+            this.beaconManager.unbind(this);
+        }
     }
 
     /**
@@ -244,7 +249,7 @@ public class MainActivity extends AppCompatActivity
                                 }
                             };
                             Log.d("TIMER", "Time: " + InteractionDefinition.getTime());
-                            timer.schedule(timerTask, InteractionDefinition.getTime()*1000); // Executará uma vez após X segundos
+                            timer.schedule(timerTask, InteractionDefinition.getTime() * 1000); // Executará uma vez após X segundos
                             Log.d(TAG, "Timer started");
                             timerStarted = true;
                             timePassed = false;

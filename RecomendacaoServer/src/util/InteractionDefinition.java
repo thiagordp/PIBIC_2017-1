@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Thiago Raulino Dal Pont Definições das operações e dos dispositivos
+ * @author Thiago Raulino Dal Pont
+ *
+ *         Definições das operações e dos dispositivos
  */
 public class InteractionDefinition {
 

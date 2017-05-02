@@ -44,11 +44,13 @@
         </intent-filter>
 
         <activity android:name=".activities.MainActivity" />
+
         <activity
             android:name=".activities.InteractionActivity"
             android:label="@string/title_activity_interaction"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".activities.ConfigActivity"></activity>
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".activities.ConfigActivity" />
     </application>
 
 </manifest>

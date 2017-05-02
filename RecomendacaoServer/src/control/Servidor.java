@@ -2,14 +2,8 @@ package control;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -167,6 +161,7 @@ public class Servidor {
 
 			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
 			ret += doc + "\t\t-----------------\t\t";
+			mongo.fechaConexao();
 			return ret; /*
 						 * mongo.removeTodos(InteractionDefinition.
 						 * USER_COLLECTION_NAME); doc =
@@ -198,6 +193,8 @@ public class Servidor {
 		//
 		// case 6:
 		case 11:
+
+			return "{ device_mace: " + deviceMac + "}";
 
 		default:
 			return "{}";
@@ -268,6 +265,7 @@ public class Servidor {
 				InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
+			mongodb.fechaConexao();
 			return JsonConverter.productListToJson(null);
 		}
 
@@ -318,6 +316,7 @@ public class Servidor {
 				InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
+			mongodb.fechaConexao();
 			return JsonConverter.productListToJson(null);
 		}
 
@@ -349,24 +348,22 @@ public class Servidor {
 		return JsonConverter.productListToJson(listSeenProduct);
 	}
 
-	private List<Document> removeDuplicate(List<Document> listDocument) {
-
-		for (int i = 0; listDocument != null && i < listDocument.size(); i++) {
-			Document document = listDocument.get(i);
-
-			for (int j = 1; j < listDocument.size(); j++) {
-				Document doc2 = listDocument.get(j);
-
-				// Se o hash ou o product_id forem iguais remove.
-				if (document.get("_id").toString().equals(doc2.get("_id").toString())
-						|| document.get("product_id").toString().equals(doc2.get("product_id").toString())) {
-					listDocument.remove(j);
-				}
-			}
-		}
-
-		return listDocument;
-	}
+	/*
+	 * private List<Document> removeDuplicate(List<Document> listDocument) {
+	 * 
+	 * for (int i = 0; listDocument != null && i < listDocument.size(); i++) {
+	 * Document document = listDocument.get(i);
+	 * 
+	 * for (int j = 1; j < listDocument.size(); j++) { Document doc2 =
+	 * listDocument.get(j);
+	 * 
+	 * // Se o hash ou o product_id forem iguais remove. if
+	 * (document.get("_id").toString().equals(doc2.get("_id").toString()) ||
+	 * document.get("product_id").toString().equals(doc2.get("product_id").
+	 * toString())) { listDocument.remove(j); } } }
+	 * 
+	 * return listDocument; }
+	 */
 
 	/**
 	 *
@@ -418,6 +415,7 @@ public class Servidor {
 		// Selecionar toda a info do produto
 
 		if (listProd.size() == 0) {
+			mongodb.fechaConexao();
 			return "{}";
 		}
 

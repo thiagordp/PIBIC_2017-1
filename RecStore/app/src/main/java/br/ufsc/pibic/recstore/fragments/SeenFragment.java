@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import br.ufsc.pibic.recstore.R;
+import br.ufsc.pibic.recstore.tasks.AsyncTaskURLOffer;
 import br.ufsc.pibic.recstore.tasks.AsyncTaskURLPurchaseSeen;
 import br.ufsc.pibic.recstore.util.InteractionDefinition;
 
@@ -19,6 +21,7 @@ import br.ufsc.pibic.recstore.util.InteractionDefinition;
  */
 public class SeenFragment extends Fragment {
     private Integer user_id;
+    private View view = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,18 +29,40 @@ public class SeenFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Toast.makeText(getContext(), "resume", Toast.LENGTH_SHORT).show();
+
+        if (this.view == null) {
+            Toast.makeText(getContext(), "Erro", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
+
+        AsyncTaskURLPurchaseSeen taskURLSeen = new AsyncTaskURLPurchaseSeen(getContext(), this.view);
+        // Log.d("OFFER", "user: " + user_id);
+        String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
+        Log.d("BUILD_URL", buildURL);
+
+        if (!buildURL.equals("")) {             // Caso a URL tenha sido construída com sucesso
+            taskURLSeen.execute(buildURL);
+        }
+
+        Toast.makeText(getContext(), "yeah!!!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_purchase_seen, container, false); //
-
+        this.view = v;
         this.user_id = getArguments().getInt("user_id");
-
+/*
         AsyncTaskURLPurchaseSeen taskURLPurchase = new AsyncTaskURLPurchaseSeen(getContext(), v);
         Log.d("PURCHASE", "user: " + user_id);
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
 
         if (!buildURL.equals("")) {
             taskURLPurchase.execute(buildURL);
-        }
+        }*/
 
         return v;
     }
