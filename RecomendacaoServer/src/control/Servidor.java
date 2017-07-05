@@ -28,93 +28,13 @@ public class Servidor {
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String recordRequest(@QueryParam("user_id") Integer userId, @QueryParam("type") Integer type,
-			@QueryParam("device_tech") Integer deviceTech, @QueryParam("device_mac") String deviceMac,
-			@QueryParam("beacon_minor") Integer beaconMinor, @QueryParam("beacon_major") Integer beaconMajor,
-			@QueryParam("beacon_rssi") Integer beaconRssi, @QueryParam("user_login") String userLogin,
-			@QueryParam("user_password") String userPassword) {
+	public String recordRequest(@QueryParam("user_id") Integer userId, @QueryParam("type") Integer type, @QueryParam("device_tech") Integer deviceTech,
+			@QueryParam("device_mac") String deviceMac, @QueryParam("beacon_minor") Integer beaconMinor, @QueryParam("beacon_major") Integer beaconMajor,
+			@QueryParam("beacon_rssi") Integer beaconRssi, @QueryParam("user_login") String userLogin, @QueryParam("user_password") String userPassword) {
 
 		if (type == null) {
 			return "{}";
 		}
-
-		///////////////////////////////////
-		/////// ÁREA DE TESTE /////////////
-		///////////////////////////////////
-		//
-		// Document teste = new Document("teste", "123");
-		// try {
-		//
-		//
-		// Mongo mongodb = new Mongo("pibic", getCollectionList());
-		// mongodb.removeTodos(InteractionDefinition.DEVICE_COLLECTION_NAME);
-		// mongodb.removeTodos(InteractionDefinition.INTERACTION_COLLECTION_NAME);
-		// mongodb.removeTodos(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-		// mongodb.removeTodos(InteractionDefinition.USER_COLLECTION_NAME);
-		//
-		// return
-		/////////////////////////////////// mongodb.listaRegistros(InteractionDefinition.INTERACTION_COLLECTION_NAME).toString();
-		//
-		// mongodb.insere(teste, InteractionDefinition.DEVICE_COLLECTION_NAME);
-		// mongodb.insere(teste,
-		// InteractionDefinition.INTERACTION_COLLECTION_NAME);
-		// mongodb.insere(teste, InteractionDefinition.PRODUCT_COLLECTION_NAME);
-		// mongodb.insere(teste, InteractionDefinition.USER_COLLECTION_NAME);
-		//
-		// return
-		// mongodb.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME).toString();
-		// } catch (Exception e) {
-		// return e.getMessage();
-		// }
-
-		// PopulateDatabase.insertProducts();
-		// PopulateDatabase.insertDevices();
-		//
-		// return ((new Mongo("pibic",
-		// getCollectionList())).listaRegistros(InteractionDefinition.INTERACTION_COLLECTION_NAME)).toString();
-
-		////////////////////////////////////////////////////////////////////////////////////
-
-		// return new Mongo("pibic", getCollectionList())
-		// .procura("type", InteractionDefinition.ACTION_PURCHASE,
-		// InteractionDefinition.INTERACTION_COLLECTION_NAME)
-		// .toString();
-		// PopulateDatabase.insertPurchase();
-		// return "abc13";
-
-		// Mongo mongo = new Mongo("pibic",
-		// InteractionDefinition.getCollectionList());
-		//
-		// List<Document> documents = mongo.procura("type", "1",
-		// InteractionDefinition.INTERACTION_COLLECTION_NAME);
-		//
-		// for (Document document : documents) {
-		// mongo.remove(document,
-		// InteractionDefinition.INTERACTION_COLLECTION_NAME);
-		// }
-
-		// ##########################################################################
-		// //
-		// Mongo mongo = new Mongo("pibic",
-		// InteractionDefinition.getCollectionList());
-		// // PopulateDatabase.insertProducts();
-		// mongo.removeTodos(InteractionDefinition.DEVICE_COLLECTION_NAME);
-		// mongo.removeTodos(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-		// mongo.removeTodos(InteractionDefinition.INTERACTION_COLLECTION_NAME);
-		// PopulateDatabase.insertProducts();
-		// PopulateDatabase.insertPurchase();
-		// PopulateDatabase.insertDevices();
-		//
-		// return
-		// mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME).toString()
-		// + "||----------||"
-		// + mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME)
-		// + "||-----------------||"
-		// +
-		// mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-		// #########################################################################
-		// //
-		// return "abcc123";
 
 		switch (type) {
 		case InteractionDefinition.TYPE_URL_PURCHASE:
@@ -127,95 +47,24 @@ public class Servidor {
 			return offerRequest(userId);
 		case InteractionDefinition.TYPE_URL_LOGIN:
 			return loginRequest(userLogin, userPassword);
-		case 10:
-			String ret = "";
-			Mongo mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
-
-			// return
-			// mongo.listaRegistros(InteractionDefinition.PRODUCT_COLLECTION_NAME).toString();
-			/*
-			 * 
-			 * List<Document> doc = mongo.listaRegistros(InteractionDefinition.
-			 * PRODUCT_COLLECTION_NAME); ret += doc +
-			 * "\t\t-----------------\t\t";
-			 * mongo.removeTodos(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-			 * doc = mongo.listaRegistros(InteractionDefinition.
-			 * PRODUCT_COLLECTION_NAME); ret += doc +
-			 * "\t\t-----------------\t\t"; PopulateDatabase.insertProducts();
-			 * doc = mongo.listaRegistros(InteractionDefinition.
-			 * PRODUCT_COLLECTION_NAME); ret += doc +
-			 * "\t\txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\t\t";
-			 * 
-			 * doc =
-			 * mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME
-			 * ); ret += doc + "\t\t-----------------\t\t";
-			 * mongo.removeTodos(InteractionDefinition.DEVICE_COLLECTION_NAME);
-			 * doc =
-			 * mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME
-			 * ); ret += doc + "\t\t-----------------\t\t";
-			 * PopulateDatabase.insertDevices(); doc =
-			 * mongo.listaRegistros(InteractionDefinition.DEVICE_COLLECTION_NAME
-			 * ); ret += doc + "\t\t-----------------\t\t";
-			 * 
-			 */
-
-			List<Document> doc = mongo.listaRegistros(InteractionDefinition.USER_COLLECTION_NAME);
-			ret += doc + "\t\t-----------------\t\t";
-			mongo.fechaConexao();
-			return ret; /*
-						 * mongo.removeTodos(InteractionDefinition.
-						 * USER_COLLECTION_NAME); doc =
-						 * mongo.listaRegistros(InteractionDefinition.
-						 * USER_COLLECTION_NAME); ret += doc +
-						 * "\t\t-----------------\t\t";
-						 * PopulateDatabase.insertUsers(); doc =
-						 * mongo.listaRegistros(InteractionDefinition.
-						 * USER_COLLECTION_NAME); ret += doc +
-						 * "\t\txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\t\t";
-						 * 
-						 * doc = mongo.listaRegistros(InteractionDefinition.
-						 * INTERACTION_COLLECTION_NAME); ret += doc +
-						 * "\t\t-----------------\t\t";
-						 * mongo.removeTodos(InteractionDefinition.
-						 * INTERACTION_COLLECTION_NAME); doc =
-						 * mongo.listaRegistros(InteractionDefinition.
-						 * INTERACTION_COLLECTION_NAME); ret += doc +
-						 * "\t\t-----------------\t\t";
-						 * PopulateDatabase.insertPurchase(); doc =
-						 * mongo.listaRegistros(InteractionDefinition.
-						 * INTERACTION_COLLECTION_NAME); ret += doc +
-						 * "\t\t-----------------\t\t";
-						 */
-
-		// case 5: // Popular usuários
-		// PopulateDatabase.insertUsers();
-		// return "";
-		//
-		// case 6:
-		case 11:
-
-			return "{ device_mace: " + deviceMac + "}";
-
 		default:
 			return "{}";
 		}
 	}
 
-	private List<String> getCollectionList() {
-
-		List<String> lista = new ArrayList<>();
-
-		lista.add(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-		lista.add(InteractionDefinition.USER_COLLECTION_NAME);
-		lista.add(InteractionDefinition.DEVICE_COLLECTION_NAME);
-		lista.add(InteractionDefinition.INTERACTION_COLLECTION_NAME);
-
-		return lista;
-	}
-
+	/**
+	 * Função que faz as operações relacionadas à requisição de login
+	 * 
+	 * @param login
+	 *            Login do usuário
+	 * @param password
+	 *            Senha do login
+	 * @return JSON com resultado da operação (concedido ou negado) e, em caso
+	 *         afirmativo, a identificação do usuário
+	 */
 	public String loginRequest(String login, String password) {
 
-		Mongo mongodb = new Mongo("pibic", getCollectionList());
+		Mongo mongodb = new Mongo("pibic", InteractionDefinition.getCollectionList());
 		Document document = new Document();
 		document.append("user_login", login);
 		document.append("user_password", password);
@@ -240,6 +89,13 @@ public class Servidor {
 		return json.toString();
 	}
 
+	/**
+	 * Função que faz as operações relacionadas à requisição de recomendações
+	 * 
+	 * @param user_id
+	 *            Identificação do usuário
+	 * @return JSON com uma lista de recomendações para o usuário
+	 */
 	public String offerRequest(Integer user_id) {
 
 		Recomendation recomendation = new Recomendation();
@@ -248,12 +104,15 @@ public class Servidor {
 	}
 
 	/**
-	 *
+	 * Função que faz as operações relacionadas à requisição de compras
+	 * realizadas
+	 * 
 	 * @param user_id
-	 * @return
+	 *            Identificação do usuário
+	 * @return JSON com uma lista de produtos recomendados
 	 */
 	public String purchaseRequest(Integer user_id) {
-		Mongo mongodb = new Mongo("pibic", getCollectionList());
+		Mongo mongodb = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
 		// Pesquisar o produto relacionado ao device
 
@@ -261,8 +120,7 @@ public class Servidor {
 		docSearchFilter.append("type", InteractionDefinition.ACTION_PURCHASE);
 		docSearchFilter.append("user_id", user_id);
 
-		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter,
-				InteractionDefinition.INTERACTION_COLLECTION_NAME);
+		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
 			mongodb.fechaConexao();
@@ -274,8 +132,7 @@ public class Servidor {
 		for (Document docInteraction : listSeenInteraction) {
 
 			Integer productId = Integer.valueOf(docInteraction.get("product_id").toString());
-			List<Document> listProduct = mongodb.procura("product_id", productId,
-					InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			List<Document> listProduct = mongodb.procura("product_id", productId, InteractionDefinition.PRODUCT_COLLECTION_NAME);
 
 			for (Document docProduct : listProduct) {
 				docProduct.append("timestamp", docInteraction.get("timestamp")); // Adcionar
@@ -298,13 +155,15 @@ public class Servidor {
 	}
 
 	/**
-	 *
+	 * Função que faz as operações relacionadas à requisição de produtos vistos
+	 * 
 	 * @param user_id
+	 *            Identificação do usuário
 	 * @return Lista onde cada célula tem informações sobre um produto e o
 	 *         momento de interação com este.
 	 */
 	public String seenRequest(Integer user_id) {
-		Mongo mongodb = new Mongo("pibic", getCollectionList());
+		Mongo mongodb = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
 		// Pesquisar o produto relacionado ao device
 
@@ -312,8 +171,7 @@ public class Servidor {
 		docSearchFilter.append("type", InteractionDefinition.ACTION_SEEN);
 		docSearchFilter.append("user_id", user_id);
 
-		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter,
-				InteractionDefinition.INTERACTION_COLLECTION_NAME);
+		List<Document> listSeenInteraction = mongodb.procura(docSearchFilter, InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
 		if (listSeenInteraction.size() == 0) {
 			mongodb.fechaConexao();
@@ -325,8 +183,7 @@ public class Servidor {
 		for (Document docInteraction : listSeenInteraction) {
 
 			Integer productId = Integer.valueOf(docInteraction.get("product_id").toString());
-			List<Document> listProduct = mongodb.procura("product_id", productId,
-					InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			List<Document> listProduct = mongodb.procura("product_id", productId, InteractionDefinition.PRODUCT_COLLECTION_NAME);
 
 			for (Document docProduct : listProduct) {
 				docProduct.append("timestamp", docInteraction.get("timestamp")); // Adcionar
@@ -348,35 +205,25 @@ public class Servidor {
 		return JsonConverter.productListToJson(listSeenProduct);
 	}
 
-	/*
-	 * private List<Document> removeDuplicate(List<Document> listDocument) {
-	 * 
-	 * for (int i = 0; listDocument != null && i < listDocument.size(); i++) {
-	 * Document document = listDocument.get(i);
-	 * 
-	 * for (int j = 1; j < listDocument.size(); j++) { Document doc2 =
-	 * listDocument.get(j);
-	 * 
-	 * // Se o hash ou o product_id forem iguais remove. if
-	 * (document.get("_id").toString().equals(doc2.get("_id").toString()) ||
-	 * document.get("product_id").toString().equals(doc2.get("product_id").
-	 * toString())) { listDocument.remove(j); } } }
-	 * 
-	 * return listDocument; }
-	 */
-
 	/**
-	 *
+	 * Função que faz as operações relacionadas à requisição de registro de
+	 * interação
+	 * 
 	 * @param user_id
+	 *            Identificação do usuário
 	 * @param deviceTech
+	 *            Tipo de dispositivo (beacon ou tag NFC)
 	 * @param deviceMac
+	 *            MAC do dispositivo
 	 * @param beaconMinor
+	 *            Minor do beacon (caso seja NFC, é nulo)
 	 * @param beaconMajor
+	 *            Major do beacon (caso seja NFC, é nulo)
 	 * @param beaconRssi
+	 *            RSSI do beacon (caso seja NFC, é nulo)
 	 * @return JSON com info do produto destacado
 	 */
-	public String recordRequest(Integer user_id, Integer deviceTech, String deviceMac, Integer beaconMinor,
-			Integer beaconMajor, Integer beaconRssi) {
+	public String recordRequest(Integer user_id, Integer deviceTech, String deviceMac, Integer beaconMinor, Integer beaconMajor, Integer beaconRssi) {
 
 		/////////////////////////////////////////
 		// MAC DISPONÍVEIS
@@ -385,32 +232,18 @@ public class Servidor {
 		/////////////////////////////////////////
 
 		// Instanciação do banco
-		Mongo mongodb = new Mongo("pibic", getCollectionList());
+		Mongo mongodb = new Mongo("pibic", InteractionDefinition.getCollectionList());
 
 		// Pesquisar o produto relacionado ao device
-		List<Document> listDevProd = mongodb.procura("device_mac", deviceMac,
-				InteractionDefinition.DEVICE_COLLECTION_NAME);
+		List<Document> listDevProd = mongodb.procura("device_mac", deviceMac, InteractionDefinition.DEVICE_COLLECTION_NAME);
 		List<Document> listProd = new ArrayList<Document>();
 
 		// Para cada produto na lista, pega os dados do original
 		for (int i = 0; i < listDevProd.size(); i++) {
 			Document document = listDevProd.get(i);
 
-			listProd.addAll(mongodb.procura("product_id", (Integer) document.get("product_id"),
-					InteractionDefinition.PRODUCT_COLLECTION_NAME));
+			listProd.addAll(mongodb.procura("product_id", (Integer) document.get("product_id"), InteractionDefinition.PRODUCT_COLLECTION_NAME));
 		}
-
-		//////////////////////////////////////
-		// Document doc = new Document();
-		//
-		// doc.append("product_id", 123);
-		// doc.append("product_name", "Mouse");
-		// doc.append("product_price", 1.50);
-		// doc.append("product_quantity", 30);
-		// doc.append("product_url", "http://www.google.com");
-		//
-		// listProd.add(doc);
-		// ////////////////////////////////////////
 
 		// Selecionar toda a info do produto
 
@@ -420,6 +253,7 @@ public class Servidor {
 		}
 
 		Document produto = listProd.get(0);
+
 		// Transformar todos os dados em um registro de interação
 		Document record = new Document(); // Registro da interação
 
@@ -439,17 +273,18 @@ public class Servidor {
 												// interação.
 		deviceDoc.append("device_tech", deviceTech);
 		deviceDoc.append("device_mac", deviceMac);
+
 		if (deviceTech == InteractionDefinition.DEVICE_BEACON) {
 			deviceDoc.append("beacon_major", beaconMajor);
 			deviceDoc.append("beacon_minor", beaconMinor);
 			deviceDoc.append("beacon_rssi", beaconRssi);
 		}
+
 		record.append("product_id", Integer.valueOf(produto.get("product_id").toString()));
 		record.append("device", deviceDoc);
 
 		// inserir no banco a interação.
 		mongodb.insere(record, InteractionDefinition.INTERACTION_COLLECTION_NAME);
-
 		mongodb.fechaConexao();
 		// Retorna o JSON
 		return produto.toJson();

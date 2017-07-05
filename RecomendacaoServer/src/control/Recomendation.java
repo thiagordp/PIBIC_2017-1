@@ -33,8 +33,7 @@ public class Recomendation {
 		for (int i = 0; i < listDoc.size(); i++) {
 			Document document = listDoc.get(i);
 
-			listProd.addAll(mongodb.procura("product_id", (Integer) document.get("product_id"),
-					InteractionDefinition.PRODUCT_COLLECTION_NAME));
+			listProd.addAll(mongodb.procura("product_id", (Integer) document.get("product_id"), InteractionDefinition.PRODUCT_COLLECTION_NAME));
 		}
 
 		removeDuplicate(listProd);
@@ -79,21 +78,15 @@ public class Recomendation {
 
 	public String collaborativeFilteringRec(Integer userId) {
 
-		@SuppressWarnings("unused")
-		String debug = "";
 		Mongo mongo = null;
-		debug += (":::init:::");
 
 		try {
 			mongo = new Mongo("pibic", InteractionDefinition.getCollectionList());
-
-			debug += (":::Start:::");
 
 			// Pesquisar se o usuário está cadastrado.
 			Document testUserDoc = new Document();
 			testUserDoc.append("user_id", userId);
 
-			debug += ("Before query1:::");
 			List<Document> listQuery = mongo.procura(testUserDoc, InteractionDefinition.USER_COLLECTION_NAME);
 
 			if (listQuery.isEmpty()) {
@@ -102,30 +95,20 @@ public class Recomendation {
 				return JsonConverter.productListToJson(null);
 			}
 
-			debug += ("After query1:::");
-
 			// Cria hash from pessoa
 			Map<Integer, Integer> hashPerson = createUserProductHash(userId);
-			debug += hashPerson.toString();
-			debug += ("After hash1:::");
 			List<Double> listAngle = new ArrayList<>();
 
 			// Selecionar todas as pessoas que têm pelo menos um produto
 			// interagido em comum
-			debug += ("Before find userInt:::");
-			List<Document> userIntList = mongo.procura(new Document("user_id", userId),
-					InteractionDefinition.INTERACTION_COLLECTION_NAME);
+			List<Document> userIntList = mongo.procura(new Document("user_id", userId), InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
-			debug += ("Before find fullInt:::");
 			List<Document> fullIntList = mongo.listaRegistros(InteractionDefinition.INTERACTION_COLLECTION_NAME);
 
-			debug += ("Before remove commom:::");
 			fullIntList.removeAll(userIntList); // Garante que só resta outros
 												// usuários nas interações.
 
 			List<Document> resultList = new ArrayList<>();
-
-			debug += ("Before find for:::");
 
 			// Resgate dos usuários que interagiram com pelo menos um produto
 			// que o usuário atual também o fez.
@@ -143,14 +126,10 @@ public class Recomendation {
 			resultList.clear();
 			resultList.addAll(removeDupl);
 
-			debug += ("After find for:::");
 			if (resultList.isEmpty()) {
-				debug += ("null:::");
 				return JsonConverter.productListToJson(null); // Retorna um json
 																// vazio.
 			}
-
-			debug += ("Before cosine for:::");
 
 			// TODO: Calcular o ângulo do usuário em relação a cada uma dessas
 			// pessoas.
@@ -160,7 +139,6 @@ public class Recomendation {
 				listAngle.add(calculateCosine(hashPerson, createUserProductHash(userIdQuery)));
 			}
 
-			debug += "#####" + listAngle.toString() + "####";
 			/*
 			 * listAngle.sort(new Comparator<Double>() {
 			 * 
@@ -170,7 +148,6 @@ public class Recomendation {
 			 * 
 			 * return 0; } }, Collections.reverseOrder());
 			 */
-			debug += ("After cosine for:::");
 
 			Random random = new Random();
 
@@ -178,8 +155,6 @@ public class Recomendation {
 			int[] userMatchs = new int[recomendationCount];
 			double max = 0;
 			int i, index = 0;
-
-			debug += ("Before pick best matches for:::");
 
 			// TODO: para cada usuário na lista final, gerar recomendações com
 			// base em subtração de conjustos
@@ -202,7 +177,6 @@ public class Recomendation {
 
 			resultList = new ArrayList<>();
 
-			debug += ("Before g for:::");
 			for (int j = 0; j < listAngle.size() && j < recomendationCount; j++) {
 				if (userMatchs[j] > 0) {
 					List<Document> result = recommend(userId, userMatchs[j]);
@@ -212,9 +186,6 @@ public class Recomendation {
 					}
 				}
 			}
-
-			// TODO: se no final, não tiver nada, colocar alguns aleatórios.
-			debug += "|||||||||" + resultList.toString() + "||||||||||";
 
 			removeDupl = new HashSet<>();
 			removeDupl.addAll(resultList);
@@ -231,14 +202,13 @@ public class Recomendation {
 			// TODO: OPT: níveis de interesse conforme o tipo de interação
 			// (beacon, nfc)
 		} catch (Exception e) {
-			debug += (e.getMessage() + ":::");
+			e.printStackTrace();
 		}
 
 		if (mongo != null) {
 			mongo.fechaConexao();
 		}
 
-		// return debug;
 		return JsonConverter.productListToJson(null);
 	}
 
@@ -284,8 +254,7 @@ public class Recomendation {
 		list = new ArrayList<>();
 
 		for (Document document : listProductUser2) {
-			List<Document> listDoc = mongodb.procura("product_id", document.get("product_id"),
-					InteractionDefinition.PRODUCT_COLLECTION_NAME);
+			List<Document> listDoc = mongodb.procura("product_id", document.get("product_id"), InteractionDefinition.PRODUCT_COLLECTION_NAME);
 
 			list.addAll(listDoc);
 		}

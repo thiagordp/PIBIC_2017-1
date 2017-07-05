@@ -75,7 +75,7 @@ public class AsyncTaskLogin extends AsyncTask<String, Void, JSONObject> {
 
                 String user = jsonObject.getString("user_id");
                 Log.d(TAG, "User string before:" + user);
-                user = user.replace("[","").replace("]","");
+                user = user.replace("[", "").replace("]", "");
 
                 Log.d(TAG, "User string after:" + user);
                 int user_id = Integer.valueOf(user);

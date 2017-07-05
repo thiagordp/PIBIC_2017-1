@@ -2,7 +2,6 @@ package br.ufsc.pibic.recstore.util;
 
 
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,7 +154,7 @@ public class InteractionDefinition {
             //  Toast.makeText(v.getContext(), "Erro ao abrir o arquivo.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-        return 10;
+        return 5;
     }
 
     public static void setIp(String ip) {
@@ -213,7 +212,7 @@ public class InteractionDefinition {
         }
 
 
-        return "10.0.0.1";
+        return "10.0.0.106";
     }
 
     /**
@@ -235,7 +234,7 @@ public class InteractionDefinition {
 
             stringBuilder.append(path);
             stringBuilder.append("type=");
-            stringBuilder.append(strType);
+            stringBuilder.append(type);
             stringBuilder.append("&user_id=");
             stringBuilder.append(strUser);
 

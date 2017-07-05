@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import br.ufsc.pibic.recstore.R;
-import br.ufsc.pibic.recstore.tasks.AsyncTaskURLOffer;
 import br.ufsc.pibic.recstore.tasks.AsyncTaskURLPurchaseSeen;
 import br.ufsc.pibic.recstore.util.InteractionDefinition;
 

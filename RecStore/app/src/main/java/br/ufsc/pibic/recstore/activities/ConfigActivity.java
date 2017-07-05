@@ -1,7 +1,7 @@
 package br.ufsc.pibic.recstore.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import br.ufsc.pibic.recstore.R;
 import br.ufsc.pibic.recstore.fragments.SettingsFragment;

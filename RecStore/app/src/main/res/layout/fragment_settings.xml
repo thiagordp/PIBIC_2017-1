@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="10.0.0.102"
+        android:text="10.0.0.106"
         android:textAlignment="center"
         android:textSize="20sp" />
 
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:progress="100" />
+        android:progress="10" />
 
     <TextView
         android:layout_width="match_parent"

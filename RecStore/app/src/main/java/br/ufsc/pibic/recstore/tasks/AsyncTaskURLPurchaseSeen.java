@@ -35,8 +35,6 @@ public class AsyncTaskURLPurchaseSeen extends AsyncTask<String, Void, JSONArray>
     @Override
     protected JSONArray doInBackground(String... params) {
         for (String strUrl : params) {
-
-
             try {
                 Log.d("ASYNC_PURCH", "Conectando com url");
 

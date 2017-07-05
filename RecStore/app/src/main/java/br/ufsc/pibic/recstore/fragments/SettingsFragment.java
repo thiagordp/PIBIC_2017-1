@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,8 +22,6 @@ import java.io.IOException;
 import br.ufsc.pibic.recstore.R;
 import br.ufsc.pibic.recstore.util.InteractionDefinition;
 import br.ufsc.pibic.recstore.util.Util;
-
-import static android.R.attr.x;
 
 
 public class SettingsFragment extends Fragment {
