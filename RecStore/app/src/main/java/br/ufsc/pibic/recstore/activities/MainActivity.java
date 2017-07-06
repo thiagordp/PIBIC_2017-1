@@ -56,21 +56,69 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BeaconConsumer {
 
+    /**
+     * Indica o último beacon detectado.
+     * Atributo utilizado para verificar a repetição da detecção de um beacon
+     */
     private Beacon lastBeacon = null;
+
+    /**
+     * Gerenciador de beacons
+     */
     private BeaconManager beaconManager;
+
+    /**
+     * Variáveis utilizadas para verificar se o beacon está próximo por um tempo determinado.
+     */
     private boolean timePassed = false;
     private boolean timerStarted = false;
-    private Class currentFragment = null;
-    private double lastDistance = -1.0;
+
+    /**
+     * String de identificação para geração de Log's.
+     */
     private final String TAG = "MAIN_ACT";
+
+    /**
+     * Atributo que garante que configurações de beacon sejam executadas apenas uma vez na execução da aplicação.
+     */
     private int bounded = 0;
-    private int detected = 0;
+
+    /**
+     * Identificação do usuário que fez login na aplicação.
+     * <p>
+     * Por padrão é 1
+     */
     private Integer userId = 1;
+
+    /**
+     * Array que armazena as intent que se quer filtrar
+     */
     private IntentFilter[] intentFilters;
+
+    /**
+     * Instância do adaptador NFC
+     * É null caso o dispositivo não tenha suporte.
+     */
     private NfcAdapter nfcAdapter;
+
+    /**
+     * Descrição de uma intent e a ação a tomar
+     */
     private PendingIntent pendingIntent;
+
+    /**
+     * Região ao qual os beacons foram detectados
+     */
     private Region region = null;
+
+    /**
+     * Classes de etiquetas NFC detectadas
+     */
     private String[][] nfcTechLists;
+
+    /**
+     * Timer para verificação de tempo de aproximação
+     */
     private Timer timer;
 
     @Override
@@ -94,8 +142,8 @@ public class MainActivity extends AppCompatActivity
         nfcSetup();             // Runs setup commands for NFC.
         initializeFragment();   // Initializes a default starting fragment
 
-        Intent intent = getIntent();
-        this.userId = intent.getIntExtra("user_id", -1);
+        Intent intent = getIntent();    // Intent da activity
+        this.userId = intent.getIntExtra("user_id", -1); // Recebe a identificação de usuário
 
         Log.d(TAG, "User_id from intent: " + this.userId);
         /////////////////////////////
@@ -142,7 +190,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void nfcSetup() {
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this); // Instância do adaptador NFC.
 
         if (nfcAdapter == null) {
             Toast.makeText(getApplicationContext(), "NFC não suportado", Toast.LENGTH_LONG).show();
@@ -151,21 +199,28 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "NFC ativado", Toast.LENGTH_SHORT).show();
                 pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-                IntentFilter ndefIntent = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+                IntentFilter ndefIntent = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED); // filtragem de intent de descoberta de tag NFC.
                 try {
                     ndefIntent.addDataType("*/*");
-                    intentFilters = new IntentFilter[]{ndefIntent};
+                    intentFilters = new IntentFilter[]{ndefIntent}; // Adiciona a intent de NFC à lista de filtros de intents
+
                 } catch (Exception e) {
-//
+                    e.printStackTrace();
                 }
 
-                nfcTechLists = new String[][]{new String[]{NfcF.class.getName()}};
+                nfcTechLists = new String[][]{new String[]{NfcF.class.getName()}};// Adiciona a classe F à lista de tags suportadas.
+
             } else {
                 Toast.makeText(getApplicationContext(), "NFC desativado", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    /**
+     * Definição das ações a se tomar em função da descoberta de tag NFC.
+     *
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -175,7 +230,10 @@ public class MainActivity extends AppCompatActivity
 
             String nfcContent = "";
 
+            // Recebe os dados da intent
             Parcelable[] data = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            // Extração do conteúdo da tag
             if (data != null) {
                 try {
                     for (int i = 0; i < data.length; i++) {
@@ -197,12 +255,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
-
+            // Criação da url de registro de interação por NFC no servidor da aplicação.
             String url = InteractionDefinition.buildURL(userId, InteractionDefinition.TYPE_URL_RECORD,
                     InteractionDefinition.DEVICE_NFC, nfcContent);
             intentAct.putExtra("url", url);
 
-            startActivity(intentAct);
+            startActivity(intentAct); // Inicialização da activity que fará a requisição ao servidor de registro, resgatará a imagem e mostrará ao usuário.
         } catch (Exception e) {
             Log.e("DEBUG", e.getMessage());
         }
@@ -211,9 +269,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(new RangeNotifier() {
+
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-                if (detected == 0 && collection.size() > 0) {
+                if (collection.size() > 0) {
 
                     Log.d("DEBUG", collection.size() + " Beacon(s) encontrado(s)!");
 
@@ -242,7 +301,6 @@ public class MainActivity extends AppCompatActivity
                         } else if (!timerStarted) {
                             Log.d(TAG, "Starting timer");
                             lastBeacon = beacon;
-                            lastDistance = beacon.getDistance();
 
                             TimerTask timerTask = new TimerTask() {
                                 @Override
@@ -288,6 +346,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     public static final int REQUEST_EXTERNAL_PERMISSION_CODE = 666;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -322,10 +381,10 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-
 
 
         if (nfcAdapter != null)
@@ -354,7 +413,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
@@ -381,7 +439,6 @@ public class MainActivity extends AppCompatActivity
             Log.e("ERROR", e.getMessage());
         }
 
-        currentFragment = fragmentClass;
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
 
@@ -418,8 +475,6 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
-
-        currentFragment = OffersFragment.class;
 
         setTitle("Ofertas");
 

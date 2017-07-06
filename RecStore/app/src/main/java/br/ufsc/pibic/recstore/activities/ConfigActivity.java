@@ -13,6 +13,7 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_layout, new SettingsFragment()).commit();
+        // Inicializa o fragment
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_layout, new SettingsFragment()).commit(); 
     }
 }

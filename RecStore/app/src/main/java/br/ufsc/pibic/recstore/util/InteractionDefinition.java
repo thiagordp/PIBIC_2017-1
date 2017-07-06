@@ -11,8 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Thiago Raulino Dal Pont Definições das operações e dos dispositivos
@@ -20,7 +18,7 @@ import java.util.List;
 public class InteractionDefinition {
 
     /**
-     * Indicador de requisição de compra
+     * Indicador de requisição de lista de produtos comprados
      */
     public static final int TYPE_URL_PURCHASE = 1;
 
@@ -30,29 +28,19 @@ public class InteractionDefinition {
     public static final int TYPE_URL_RECORD = 2;
 
     /**
-     * Indicador de requisição de visto
+     * Indicador de requisição de lista de produtos vistos
      */
     public static final int TYPE_URL_SEEN = 3;
 
     /**
-     *
+     * Indicador de requisição de recomendações
      */
     public static final int TYPE_URL_OFFER = 4;
 
     /**
-     *
+     * Indicador de requisição de login
      */
     public static final int TYPE_URL_LOGIN = 5;
-
-    /**
-     *
-     */
-    public static final String ACTION_SEEN = "seen";
-
-    /**
-     *
-     */
-    public static final String ACTION_PURCHASE = "purchase";
 
     /**
      *
@@ -64,44 +52,17 @@ public class InteractionDefinition {
      */
     public static final int DEVICE_NFC = 2;
 
-    /**
-     *
-     */
-    public static final String USER_COLLECTION_NAME = "user";
-
-    /**
-     *
-     */
-    public static final String DEVICE_COLLECTION_NAME = "device";
-
-    /**
-     *
-     */
-    public static final String PRODUCT_COLLECTION_NAME = "product";
-
-    /**
-     *
-     */
-    public static final String INTERACTION_COLLECTION_NAME = "interaction";
-
     public static String ip_server = getIp();
 
     public static int timeBLE = getTime();
 
     public static String URL_PREFIX = "http://" + ip_server + ":8080/RecomendacaoServer?";
 
-    public static List<String> getCollectionList() {
-
-        List<String> lista = new ArrayList<>();
-
-        lista.add(InteractionDefinition.PRODUCT_COLLECTION_NAME);
-        lista.add(InteractionDefinition.USER_COLLECTION_NAME);
-        lista.add(InteractionDefinition.DEVICE_COLLECTION_NAME);
-        lista.add(InteractionDefinition.INTERACTION_COLLECTION_NAME);
-
-        return lista;
-    }
-
+    /**
+     * Gravação em arquivo do tempo mínimo de aproximação do beacon
+     *
+     * @param time Novo valor de tempo em ms
+     */
     public static void setTime(Integer time) {
         try {
             FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
@@ -132,6 +93,11 @@ public class InteractionDefinition {
         }
     }
 
+    /**
+     * Leitura do tempo mínimo de aproximação do beacon.
+     *
+     * @return Tempo em milissegundos
+     */
     public static int getTime() {
         try {
             FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
@@ -157,6 +123,11 @@ public class InteractionDefinition {
         return 5;
     }
 
+    /**
+     * Gravação em arquivo do novo IP do servidor da aplicação
+     *
+     * @param ip Novo IP
+     */
     public static void setIp(String ip) {
         try {
             FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
@@ -187,6 +158,11 @@ public class InteractionDefinition {
         }
     }
 
+    /**
+     * Leitura do IP do servidor
+     *
+     * @return IP do servidor
+     */
     public static String getIp() {
 
         try {
@@ -211,16 +187,15 @@ public class InteractionDefinition {
             e.printStackTrace();
         }
 
-
         return "10.0.0.106";
     }
 
     /**
      * Construir URL a partir dos parâmetros informados
      *
-     * @param type
-     * @param userId
-     * @return
+     * @param type   Tipo de URL (compra, registro, etc.)
+     * @param userId Identificação do usuário
+     * @return URL para requisição ao servidor
      */
     public static String buildURL(int type, int userId) {
 
@@ -245,6 +220,14 @@ public class InteractionDefinition {
         }
     }
 
+    /**
+     * Construir URL a partir dos parâmetros informados específicos para login
+     *
+     * @param type     Tipo de URL login
+     * @param login    Login de usuário
+     * @param password Senha do usuário
+     * @return URL para requisição de login ao servidor
+     */
     public static String buildURL(int type, String login, String password) {
 
         String path = URL_PREFIX;

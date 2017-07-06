@@ -21,6 +21,12 @@ public class Util {
 
     public final static String CONFIG_PATH = Environment.getExternalStorageDirectory().toString() + "/conf.dat";
 
+    /**
+     * Captura os dados recebidos de InputStream
+     *
+     * @param is InputStream
+     * @return String com conteúdo extraído
+     */
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
@@ -134,53 +140,5 @@ public class Util {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
-    }
-
-
-    /**
-     * @param nfcContent
-     * @param userId
-     */
-    public static String createURLNFC(String nfcContent, int userId) {
-        /*
-         Dados:
-            user_id
-            type = record
-            device_tech
-            device_mac
-         */
-        String user_id = String.valueOf(userId);
-        String type = InteractionDefinition.ACTION_SEEN;
-        String device_tech = String.valueOf(InteractionDefinition.DEVICE_NFC);
-        String device_mac = nfcContent;
-
-        Log.d("DEBUG", "Montando URL...");
-
-        try {
-            user_id = URLEncoder.encode(user_id, "UTF-8");
-            type = URLEncoder.encode(type, "UTF-8");
-            device_tech = URLEncoder.encode(device_tech, "UTF-8");
-            device_mac = URLEncoder.encode(device_mac, "UTF-8");
-
-        } catch (Exception e) {
-
-        }
-
-        String stringBuilder = "";
-
-        // TODO: Pegar o caminho certo para o servidor depois.
-        String path = "http://localhost:8080/RecomendacaoServer";
-
-        stringBuilder.concat(path);
-        stringBuilder.concat("?user_id=");
-        stringBuilder.concat(user_id);
-        stringBuilder.concat("&type=");
-        stringBuilder.concat(type);
-        stringBuilder.concat("&device_tech=");
-        stringBuilder.concat(device_tech);
-        stringBuilder.concat("&device_mac=");
-        stringBuilder.concat(device_mac);
-
-        return stringBuilder;
     }
 }
