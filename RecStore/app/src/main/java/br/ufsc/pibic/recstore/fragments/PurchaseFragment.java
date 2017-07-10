@@ -40,6 +40,7 @@ public class PurchaseFragment extends Fragment {
             getActivity().finish();
         }
 
+        // Execução da tarefa de requisição da lista de compras
         AsyncTaskURLPurchaseSeen taskURLPurchase = new AsyncTaskURLPurchaseSeen(getContext(), this.view);
         Log.d("PURCHASE", "user: " + this.user_id);
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_PURCHASE, this.user_id);

@@ -418,9 +418,10 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         Class fragmentClass = null;
 
-        // Handle l view item clicks here.
+        // Extrai a identificação do item de menu que foi selecionado
         int id = item.getItemId();
 
+        // Seleção da janela a ser aberta em função do item clicado.
         if (id == R.id.nav_camera) {
             fragmentClass = OffersFragment.class;
         } else if (id == R.id.nav_gallery) {
@@ -439,11 +440,12 @@ public class MainActivity extends AppCompatActivity
             Log.e("ERROR", e.getMessage());
         }
 
+        // Id de usuário será tranferido como parâmetro à nova janela que será aberta.
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
-
         fragment.setArguments(bundle);
 
+        // Inicialização da janela
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
         item.setChecked(true);
@@ -468,11 +470,12 @@ public class MainActivity extends AppCompatActivity
             Log.e("ERROR", e.getMessage());
         }
 
+        // Id de usuário será tranferido como parâmetro à nova janela que será aberta.
         Bundle bundle = new Bundle();
         bundle.putInt("user_id", userId);
-
         fragment.setArguments(bundle);
 
+        // Inicialização da janela
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fiContent, fragment).commit();
 

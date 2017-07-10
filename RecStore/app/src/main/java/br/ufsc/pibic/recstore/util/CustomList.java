@@ -19,7 +19,10 @@ import br.ufsc.pibic.recstore.tasks.AsyncTaskImage;
 public class
 CustomList extends ArrayAdapter<String> {
 
+
     private Activity context;
+
+    // Parâmetros que cada item da lista vai ter.
     private String[] names;
     private Long[] id;
     private String[] dates;
@@ -46,9 +49,10 @@ CustomList extends ArrayAdapter<String> {
         TextView tvName = (TextView) rowView.findViewById(R.id.tvName);
         TextView tvDate = (TextView) rowView.findViewById(R.id.tvDate);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.image_not_available);  // TODO pegar imagem correta
+        imageView.setImageResource(R.drawable.image_not_available);
 
 
+        // Tarefa que faz requisição da imagem de representação do produto em segundo plano.
         AsyncTaskImage taskImage = new AsyncTaskImage(getContext(), rowView);
         taskImage.execute(urls[position]);
 

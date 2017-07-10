@@ -37,13 +37,14 @@ public class SeenFragment extends Fragment {
             getActivity().finish();
         }
 
+        // Instanciação da tarefa que faz a requisição da lista de produtos visualizados.
         AsyncTaskURLPurchaseSeen taskURLSeen = new AsyncTaskURLPurchaseSeen(getContext(), this.view);
-        // Log.d("OFFER", "user: " + user_id);
+        // Construção da URL
         String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
         Log.d("BUILD_URL", buildURL);
 
-        if (!buildURL.equals("")) {             // Caso a URL tenha sido construída com sucesso
-            taskURLSeen.execute(buildURL);
+        if (!buildURL.equals("")) {             // Caso a URL tenha sido construída com sucesso.
+            taskURLSeen.execute(buildURL);      // Executa a tarefa.
         }
 
         Toast.makeText(getContext(), "yeah!!!", Toast.LENGTH_SHORT).show();
@@ -53,15 +54,7 @@ public class SeenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_purchase_seen, container, false); //
         this.view = v;
-        this.user_id = getArguments().getInt("user_id");
-/*
-        AsyncTaskURLPurchaseSeen taskURLPurchase = new AsyncTaskURLPurchaseSeen(getContext(), v);
-        Log.d("PURCHASE", "user: " + user_id);
-        String buildURL = InteractionDefinition.buildURL(InteractionDefinition.TYPE_URL_SEEN, user_id);
-
-        if (!buildURL.equals("")) {
-            taskURLPurchase.execute(buildURL);
-        }*/
+        this.user_id = getArguments().getInt("user_id"); // Extração do parâmetro
 
         return v;
     }

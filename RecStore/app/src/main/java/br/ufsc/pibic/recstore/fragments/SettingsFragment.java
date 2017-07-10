@@ -37,16 +37,19 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // Instanciação dos objetos de layout
         final SeekBar seekBar = (SeekBar) v.findViewById(R.id.sbTempo);
         final EditText editText = (EditText) v.findViewById(R.id.edtIP);
         final TextView textView = (TextView) v.findViewById(R.id.tvTempo);
         final FloatingActionButton button = (FloatingActionButton) v.findViewById(R.id.btn_save_cfg);
         seekBar.setProgress(InteractionDefinition.getTime());
 
+
         editText.setText(InteractionDefinition.getIp());
         String x = seekBar.getProgress() + " segundo(s)";
         textView.setText(x);
 
+        // Configuração da ação executada quando o slider é movido.
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -69,6 +72,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        // Configuração a ser executada quando o botão é clicado.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +91,7 @@ public class SettingsFragment extends Fragment {
         return v;
     }
 
+    //
     private void getConfigPath(View v, TextView textView) {
         try {
             FileInputStream fileInputStream = new FileInputStream(Util.CONFIG_PATH);
